@@ -1,0 +1,7 @@
+C:\Users\mto1\Documents\NES_DEV\arduino\NanoNesV16DN3\build\core\WInterrupts.c.o: \
+ C:\Users\mto1\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.7\cores\arduino\WInterrupts.c \
+ C:\Users\mto1\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.7\cores\arduino\wiring_private.h \
+ C:\Users\mto1\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.7\cores\arduino\Arduino.h \
+ C:\Users\mto1\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.7\cores\arduino\binary.h \
+ C:\Users\mto1\AppData\Local\Arduino15\packages\arduino\hardware\avr\1.8.7\variants\eightanaloginputs/pins_arduino.h \
+ c:\users\mto1\appdata\local\arduino15\packages\arduino\hardware\avr\1.8.7\variants\standard\pins_arduino.h

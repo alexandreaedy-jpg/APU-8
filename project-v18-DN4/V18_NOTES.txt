@@ -1,0 +1,23 @@
+V18 base created from project-v17-DN4 on 2026-04-30.
+
+Source V17 ROM hash at copy time:
+8689E25458684B45669CC51052D0DAA6DDA911335FE713AF060FCA81D980E484
+
+Intent for V18:
+- Keep the current D4 preset-LFO behavior as inherited baseline.
+- Focus the next work on D0 trigger precision and note/gate latency.
+- Study event-driven / short-packet trigger approaches inspired by ChipMaestro and NESizer2.
+- Do not destabilize the working V17 branch while experimenting here.
+
+Current naming assumption:
+- DN4 is kept for V18 because D4 remains the LFO/config lane.
+- Trigger redesign work will happen primarily around D0 runtime and transport handling.
+
+First implemented pass:
+- D0 compact packet reduced to 8 bytes:
+  [0]=0xA8 [1]=0x58 [2]=P1 trig [3]=P1 note/gate [4]=P2 trig [5]=P2 note/gate [6]=TRI trig [7]=TRI note/gate
+- D3 stays at 8 bytes for ADSR + duty.
+- D4 compact packet reduced to 8 bytes:
+  [0]=0xD4 [1]=0xB4 [2]=seq [3..4]=P1 LFO cfg [5..6]=P2 LFO cfg [7]=checksum
+- TRI is intentionally excluded from D4 LFO handling in this first V18 pass.
+- NOISE is intentionally excluded from D0 in this first V18 pass to shorten live trigger traffic.

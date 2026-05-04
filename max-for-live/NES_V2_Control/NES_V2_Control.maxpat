@@ -1,0 +1,126 @@
+{
+  "patcher": {
+    "fileversion": 1,
+    "appversion": {
+      "major": 8,
+      "minor": 5,
+      "revision": 0,
+      "architecture": "x64",
+      "modernui": 1
+    },
+    "classnamespace": "box",
+    "rect": [36.0, 78.0, 980.0, 340.0],
+    "bglocked": 0,
+    "openinpresentation": 0,
+    "default_fontsize": 12.0,
+    "default_fontface": 0,
+    "default_fontname": "Arial",
+    "boxes": [
+      { "box": { "id": "obj-bg1", "maxclass": "panel", "patching_rect": [8.0, 28.0, 500.0, 28.0], "bgcolor": [0.16, 0.18, 0.21, 1.0] } },
+      { "box": { "id": "obj-bg2", "maxclass": "panel", "patching_rect": [8.0, 58.0, 452.0, 76.0], "bgcolor": [0.20, 0.22, 0.26, 1.0] } },
+      { "box": { "id": "obj-bg3", "maxclass": "panel", "patching_rect": [8.0, 138.0, 452.0, 76.0], "bgcolor": [0.18, 0.21, 0.19, 1.0] } },
+      { "box": { "id": "obj-bg4", "maxclass": "panel", "patching_rect": [510.0, 58.0, 388.0, 92.0], "bgcolor": [0.23, 0.20, 0.17, 1.0] } },
+      { "box": { "id": "obj-1", "maxclass": "comment", "patching_rect": [12.0, 8.0, 280.0, 18.0], "text": "NES V2 Control", "textcolor": [0.95, 0.96, 0.98, 1.0], "fontsize": 13.0, "fontname": "Arial Bold" } },
+      { "box": { "id": "obj-2", "maxclass": "newobj", "text": "live.thisdevice", "patching_rect": [840.0, 8.0, 90.0, 22.0] } },
+      { "box": { "id": "obj-3", "maxclass": "newobj", "text": "autopattr", "patching_rect": [840.0, 34.0, 60.0, 22.0] } },
+      { "box": { "id": "obj-vlabel", "maxclass": "comment", "patching_rect": [14.0, 33.0, 42.0, 16.0], "text": "VOICE", "textcolor": [0.82, 0.86, 0.92, 1.0], "fontsize": 10.0 } },
+      { "box": { "id": "obj-4", "maxclass": "message", "patching_rect": [60.0, 32.0, 42.0, 20.0], "text": "P1", "bgcolor": [0.31, 0.38, 0.50, 1.0], "textcolor": [1.0, 1.0, 1.0, 1.0] } },
+      { "box": { "id": "obj-5", "maxclass": "message", "patching_rect": [106.0, 32.0, 42.0, 20.0], "text": "P2", "bgcolor": [0.31, 0.38, 0.50, 1.0], "textcolor": [1.0, 1.0, 1.0, 1.0] } },
+      { "box": { "id": "obj-6", "maxclass": "message", "patching_rect": [152.0, 32.0, 42.0, 20.0], "text": "TRI", "bgcolor": [0.25, 0.47, 0.42, 1.0], "textcolor": [1.0, 1.0, 1.0, 1.0] } },
+      { "box": { "id": "obj-7", "maxclass": "message", "patching_rect": [198.0, 32.0, 52.0, 20.0], "text": "NOISE", "bgcolor": [0.53, 0.39, 0.19, 1.0], "textcolor": [1.0, 1.0, 1.0, 1.0] } },
+      { "box": { "id": "obj-8", "maxclass": "message", "patching_rect": [254.0, 32.0, 58.0, 20.0], "text": "GLOBAL", "bgcolor": [0.45, 0.30, 0.48, 1.0], "textcolor": [1.0, 1.0, 1.0, 1.0] } },
+      { "box": { "id": "obj-9", "maxclass": "message", "patching_rect": [318.0, 32.0, 100.0, 20.0], "text": "P1  (CH12)", "bgcolor": [0.12, 0.14, 0.18, 1.0], "textcolor": [0.96, 0.96, 0.88, 1.0] } },
+      { "box": { "id": "obj-10", "maxclass": "message", "patching_rect": [424.0, 32.0, 54.0, 20.0], "text": "refresh", "bgcolor": [0.22, 0.26, 0.30, 1.0], "textcolor": [0.90, 0.93, 0.97, 1.0] } },
+      { "box": { "id": "obj-11", "maxclass": "message", "patching_rect": [482.0, 32.0, 70.0, 20.0], "text": "panic_all", "bgcolor": [0.46, 0.20, 0.20, 1.0], "textcolor": [1.0, 0.97, 0.97, 1.0] } },
+
+      { "box": { "id": "obj-alabel", "maxclass": "comment", "patching_rect": [14.0, 62.0, 44.0, 16.0], "text": "ADSR", "textcolor": [0.83, 0.87, 0.92, 1.0], "fontsize": 10.0 } },
+      { "box": { "id": "obj-20", "maxclass": "comment", "patching_rect": [18.0, 82.0, 58.0, 18.0], "text": "Attack", "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-21", "maxclass": "number", "patching_rect": [18.0, 100.0, 52.0, 20.0], "parameter_enable": 1, "varname": "attack", "bgcolor": [0.11, 0.12, 0.14, 1.0], "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-22", "maxclass": "newobj", "text": "prepend attack", "patching_rect": [18.0, 122.0, 96.0, 20.0] } },
+
+      { "box": { "id": "obj-23", "maxclass": "comment", "patching_rect": [128.0, 82.0, 58.0, 18.0], "text": "Decay", "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-24", "maxclass": "number", "patching_rect": [128.0, 100.0, 52.0, 20.0], "parameter_enable": 1, "varname": "decay", "bgcolor": [0.11, 0.12, 0.14, 1.0], "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-25", "maxclass": "newobj", "text": "prepend decay", "patching_rect": [128.0, 122.0, 96.0, 20.0] } },
+
+      { "box": { "id": "obj-26", "maxclass": "comment", "patching_rect": [238.0, 82.0, 58.0, 18.0], "text": "Sustain", "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-27", "maxclass": "number", "patching_rect": [238.0, 100.0, 52.0, 20.0], "parameter_enable": 1, "varname": "sustain", "bgcolor": [0.11, 0.12, 0.14, 1.0], "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-28", "maxclass": "newobj", "text": "prepend sustain", "patching_rect": [238.0, 122.0, 104.0, 20.0] } },
+
+      { "box": { "id": "obj-29", "maxclass": "comment", "patching_rect": [352.0, 82.0, 58.0, 18.0], "text": "Release", "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-30", "maxclass": "number", "patching_rect": [352.0, 100.0, 52.0, 20.0], "parameter_enable": 1, "varname": "release", "bgcolor": [0.11, 0.12, 0.14, 1.0], "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-31", "maxclass": "newobj", "text": "prepend release", "patching_rect": [352.0, 122.0, 104.0, 20.0] } },
+
+      { "box": { "id": "obj-mlabel", "maxclass": "comment", "patching_rect": [14.0, 142.0, 44.0, 16.0], "text": "MOD", "textcolor": [0.82, 0.91, 0.84, 1.0], "fontsize": 10.0 } },
+      { "box": { "id": "obj-40", "maxclass": "message", "patching_rect": [18.0, 162.0, 92.0, 20.0], "text": "Vib Depth", "bgcolor": [0.16, 0.23, 0.17, 1.0], "textcolor": [0.96, 0.98, 0.96, 1.0] } },
+      { "box": { "id": "obj-41", "maxclass": "number", "patching_rect": [18.0, 184.0, 52.0, 20.0], "parameter_enable": 1, "varname": "ctrl1", "bgcolor": [0.11, 0.12, 0.14, 1.0], "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-42", "maxclass": "newobj", "text": "prepend ctrl1", "patching_rect": [18.0, 206.0, 92.0, 20.0] } },
+
+      { "box": { "id": "obj-43", "maxclass": "message", "patching_rect": [128.0, 162.0, 92.0, 20.0], "text": "Vib Rate", "bgcolor": [0.16, 0.23, 0.17, 1.0], "textcolor": [0.96, 0.98, 0.96, 1.0] } },
+      { "box": { "id": "obj-44", "maxclass": "number", "patching_rect": [128.0, 184.0, 52.0, 20.0], "parameter_enable": 1, "varname": "ctrl2", "bgcolor": [0.11, 0.12, 0.14, 1.0], "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-45", "maxclass": "newobj", "text": "prepend ctrl2", "patching_rect": [128.0, 206.0, 92.0, 20.0] } },
+
+      { "box": { "id": "obj-46", "maxclass": "message", "patching_rect": [238.0, 162.0, 92.0, 20.0], "text": "Glide", "bgcolor": [0.16, 0.23, 0.17, 1.0], "textcolor": [0.96, 0.98, 0.96, 1.0] } },
+      { "box": { "id": "obj-47", "maxclass": "number", "patching_rect": [238.0, 184.0, 52.0, 20.0], "parameter_enable": 1, "varname": "ctrl3", "bgcolor": [0.11, 0.12, 0.14, 1.0], "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-48", "maxclass": "newobj", "text": "prepend ctrl3", "patching_rect": [238.0, 206.0, 92.0, 20.0] } },
+
+      { "box": { "id": "obj-49", "maxclass": "message", "patching_rect": [352.0, 162.0, 92.0, 20.0], "text": "Duty", "bgcolor": [0.16, 0.23, 0.17, 1.0], "textcolor": [0.96, 0.98, 0.96, 1.0] } },
+      { "box": { "id": "obj-50", "maxclass": "number", "patching_rect": [352.0, 184.0, 52.0, 20.0], "parameter_enable": 1, "varname": "ctrl4", "bgcolor": [0.11, 0.12, 0.14, 1.0], "textcolor": [0.96, 0.96, 0.96, 1.0] } },
+      { "box": { "id": "obj-51", "maxclass": "newobj", "text": "prepend ctrl4", "patching_rect": [352.0, 206.0, 92.0, 20.0] } },
+
+      { "box": { "id": "obj-plabel", "maxclass": "comment", "patching_rect": [520.0, 62.0, 54.0, 16.0], "text": "MAP", "textcolor": [0.96, 0.87, 0.77, 1.0], "fontsize": 10.0 } },
+      { "box": { "id": "obj-60", "maxclass": "comment", "patching_rect": [520.0, 80.0, 250.0, 18.0], "text": "P1/P2: VibDepth, VibRate, Glide, Duty", "textcolor": [0.96, 0.96, 0.92, 1.0] } },
+      { "box": { "id": "obj-61", "maxclass": "comment", "patching_rect": [520.0, 98.0, 240.0, 18.0], "text": "TRI: VibDepth, VibRate, Glide, Punch", "textcolor": [0.96, 0.96, 0.92, 1.0] } },
+      { "box": { "id": "obj-62", "maxclass": "comment", "patching_rect": [520.0, 116.0, 170.0, 18.0], "text": "NOISE: Timbre, Mode", "textcolor": [0.96, 0.96, 0.92, 1.0] } },
+      { "box": { "id": "obj-63", "maxclass": "comment", "patching_rect": [520.0, 134.0, 260.0, 18.0], "text": "GLOBAL: Arp On, Arp Mode, Arp Speed, Duty", "textcolor": [0.96, 0.96, 0.92, 1.0] } },
+
+      { "box": { "id": "obj-70", "maxclass": "newobj", "text": "js C:/Users/mto1/Documents/NES_DEV/max-for-live/NES_V2_Control/nes_cc_controller.js", "patching_rect": [520.0, 172.0, 370.0, 20.0] } },
+      { "box": { "id": "obj-71", "maxclass": "newobj", "text": "midiout", "patching_rect": [520.0, 200.0, 52.0, 20.0] } },
+      { "box": { "id": "obj-72", "maxclass": "newobj", "text": "loadbang", "patching_rect": [840.0, 58.0, 58.0, 20.0] } },
+      { "box": { "id": "obj-73", "maxclass": "newobj", "text": "midiin", "patching_rect": [586.0, 200.0, 44.0, 20.0] } }
+    ],
+    "lines": [
+      { "patchline": { "source": ["obj-4", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-5", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-6", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-7", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-8", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-10", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-11", 0], "destination": ["obj-70", 0] } },
+
+      { "patchline": { "source": ["obj-21", 0], "destination": ["obj-22", 0] } },
+      { "patchline": { "source": ["obj-22", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-24", 0], "destination": ["obj-25", 0] } },
+      { "patchline": { "source": ["obj-25", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-27", 0], "destination": ["obj-28", 0] } },
+      { "patchline": { "source": ["obj-28", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-30", 0], "destination": ["obj-31", 0] } },
+      { "patchline": { "source": ["obj-31", 0], "destination": ["obj-70", 0] } },
+
+      { "patchline": { "source": ["obj-41", 0], "destination": ["obj-42", 0] } },
+      { "patchline": { "source": ["obj-42", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-44", 0], "destination": ["obj-45", 0] } },
+      { "patchline": { "source": ["obj-45", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-47", 0], "destination": ["obj-48", 0] } },
+      { "patchline": { "source": ["obj-48", 0], "destination": ["obj-70", 0] } },
+      { "patchline": { "source": ["obj-50", 0], "destination": ["obj-51", 0] } },
+      { "patchline": { "source": ["obj-51", 0], "destination": ["obj-70", 0] } },
+
+      { "patchline": { "source": ["obj-70", 0], "destination": ["obj-71", 0] } },
+      { "patchline": { "source": ["obj-73", 0], "destination": ["obj-71", 0] } },
+      { "patchline": { "source": ["obj-70", 1], "destination": ["obj-9", 0] } },
+      { "patchline": { "source": ["obj-70", 2], "destination": ["obj-40", 0] } },
+      { "patchline": { "source": ["obj-70", 3], "destination": ["obj-43", 0] } },
+      { "patchline": { "source": ["obj-70", 4], "destination": ["obj-46", 0] } },
+      { "patchline": { "source": ["obj-70", 5], "destination": ["obj-49", 0] } },
+      { "patchline": { "source": ["obj-70", 6], "destination": ["obj-21", 0] } },
+      { "patchline": { "source": ["obj-70", 7], "destination": ["obj-24", 0] } },
+      { "patchline": { "source": ["obj-70", 8], "destination": ["obj-27", 0] } },
+      { "patchline": { "source": ["obj-70", 9], "destination": ["obj-30", 0] } },
+      { "patchline": { "source": ["obj-70", 10], "destination": ["obj-41", 0] } },
+      { "patchline": { "source": ["obj-70", 11], "destination": ["obj-44", 0] } },
+      { "patchline": { "source": ["obj-70", 12], "destination": ["obj-47", 0] } },
+      { "patchline": { "source": ["obj-70", 13], "destination": ["obj-50", 0] } },
+      { "patchline": { "source": ["obj-72", 0], "destination": ["obj-4", 0] } }
+    ]
+  }
+}
