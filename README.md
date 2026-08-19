@@ -105,11 +105,11 @@ APU-8/
 - transport redesign
 - focus on note precision, trigger timing, and controller-port limits
 
-### V2 (planned)
+### V2
 
 - flashcart still used for ROM/runtime
 - external hardware moved toward the NES-001 bottom expansion port
-- likely RP2040-based external interface
+- RP2040-based external interface
 
 ## Hardware overview
 
@@ -123,7 +123,7 @@ Typical V1.x setup:
 - MIDI DIN input
 - custom wiring to controller-port data lines
 
-### Planned V2 direction
+### V2 direction
 
 Current V2 planning targets these expansion-port signals:
 
@@ -138,7 +138,7 @@ Important caveat:
 
 - the NES-001 bottom expansion port does **not** expose CPU `R/W`
 
-so V2 will need a custom handshake/latch strategy, not a generic memory-mapped design.
+so V2 needs a custom handshake/latch strategy, not a generic memory-mapped design.
 
 ## Toolchain
 
