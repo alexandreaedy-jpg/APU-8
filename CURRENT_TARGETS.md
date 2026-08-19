@@ -4,17 +4,17 @@ This file is the quick entry point for the active APU-8 build.
 
 ## Active build
 
-- ROM source folder: `Project-V2-A\v2b_step5ar_flat_env_pitch`
-- ROM binary: `Project-V2-A\v2b_step5ar_flat_env_pitch\V2_MIDI_IN_P1P2.nes`
-- Pico sketch folder: `arduino\PicoNesV2B_Step5ARFlatEnvPitch`
-- Pico sketch file: `arduino\PicoNesV2B_Step5ARFlatEnvPitch\PicoNesV2B_Step5ARFlatEnvPitch.ino`
+- ROM source folder: `ROM V2B\v2b_step5ar_flat_env_pitch`
+- ROM binary: `ROM V2B\v2b_step5ar_flat_env_pitch\V2_MIDI_IN_P1P2.nes`
+- Pico sketch folder: `Firmware Arduino\Firmware_PICO-V2B`
+- Pico sketch file: `Firmware Arduino\Firmware_PICO-V2B\Firmware_PICO-V2B.ino`
 - Current Pico firmware string: `FW=t84-v2b-step5bb-groovejitter`
 - Last fully documented accepted firmware string: `FW=t79-v2b-step5aw-wavefix`
 
 ## Active helper sketches
 
-- Raw MCP3008 diag: `arduino\PicoMcp3008RawDiag`
-- Full control-panel diag: `arduino\PicoPanelCtrlFullDiag`
+- Raw MCP3008 diag: `Firmware Arduino\PicoMcp3008RawDiag`
+- Full control-panel diag: `Firmware Arduino\PicoPanelCtrlFullDiag`
 
 ## Default commands
 

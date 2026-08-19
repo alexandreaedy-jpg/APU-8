@@ -29,7 +29,7 @@ Important :
 
 Sources consolidees :
 
-- `C:\Users\mto1\Documents\NES_DEV\Project-V2-A\V2_EXPANSION_PORT_PIN_PLAN.md`
-- `C:\Users\mto1\Documents\NES_DEV\Project-V2-A\V2_PROTO1_BREADBOARD_ARCHITECTURE.md`
-- `C:\Users\mto1\Documents\NES_DEV\arduino\PicoNesV2B_Step5ARFlatEnvPitch\PicoNesV2B_Step5ARFlatEnvPitch.ino`
+- `C:\Users\mto1\Documents\NES_DEV\ROM V2B\V2_EXPANSION_PORT_PIN_PLAN.md`
+- `C:\Users\mto1\Documents\NES_DEV\ROM V2B\V2_PROTO1_BREADBOARD_ARCHITECTURE.md`
+- `C:\Users\mto1\Documents\NES_DEV\Firmware Arduino\Firmware_PICO-V2B\Firmware_PICO-V2B.ino`
 - `C:\Users\mto1\Documents\NES_DEV\PROJECT_STATE.md`

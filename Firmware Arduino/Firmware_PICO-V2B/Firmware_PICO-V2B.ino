@@ -4453,7 +4453,7 @@ void setup() {
   Serial1.begin(MIDI_BAUD);
   delay(250);
   Serial.println();
-  Serial.println(F("PicoNesV2B_Step5ARFlatEnvPitch start"));
+  Serial.println(F("Firmware_PICO-V2B start"));
   Serial.println(F("DIN MIDI on GP1, V2B map: CH11=DMC CH12=P1 CH13=P2 CH14=TRI CH15=NOISE CH16=GLOBAL/POLY | Step5AV ARP ENV"));
   Serial.print(F("FW rev: "));
   Serial.println(FW_REV);

@@ -58,7 +58,7 @@ Use these short phrases to reduce token use.
 
 Historical note:
 
-- `midi` now points to the active build in `Project-V2-A\v2b_step5ar_flat_env_pitch` + `arduino\PicoNesV2B_Step5ARFlatEnvPitch`
+- `midi` now points to the active build in `ROM V2B\v2b_step5ar_flat_env_pitch` + `Firmware Arduino\Firmware_PICO-V2B`
 - archived step targets still work through the same short commands, but their source folders now live under `Archive\`
 
 Local commands:

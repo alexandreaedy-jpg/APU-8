@@ -16,9 +16,9 @@ $ErrorActionPreference = 'Stop'
 $Root = Split-Path -Parent $PSScriptRoot
 $ArduinoCli = Join-Path $env:LOCALAPPDATA 'Programs\Arduino IDE\resources\app\lib\backend\resources\arduino-cli.exe'
 $Fqbn = 'rp2040:rp2040:rpipico'
-$ProjectCurrentRoot = Join-Path $Root 'Project-V2-A'
+$ProjectCurrentRoot = Join-Path $Root 'ROM V2B'
 $ProjectArchiveRoot = Join-Path $Root 'Archive\Project-V2-A'
-$ArduinoCurrentRoot = Join-Path $Root 'arduino'
+$ArduinoCurrentRoot = Join-Path $Root 'Firmware Arduino'
 $ArduinoArchiveRoot = Join-Path $Root 'Archive\arduino'
 
 function New-TargetConfig {
@@ -40,7 +40,7 @@ function New-TargetConfig {
 }
 
 $Targets = @{
-  midi = New-TargetConfig $ArduinoCurrentRoot 'PicoNesV2B_Step5ARFlatEnvPitch' $ProjectCurrentRoot 'v2b_step5ar_flat_env_pitch'
+  midi = New-TargetConfig $ArduinoCurrentRoot 'Firmware_PICO-V2B' $ProjectCurrentRoot 'v2b_step5ar_flat_env_pitch'
   'midi-v2a' = New-TargetConfig $ArduinoArchiveRoot 'PicoNesV2A_MidiInP1P2' $ProjectArchiveRoot 'v2a_midi_in_p1p2'
   'midi-v2b1' = New-TargetConfig $ArduinoArchiveRoot 'PicoNesV2B_Step1P1P2EdgeMidi' $ProjectArchiveRoot 'v2b_step1_p1p2_edge_midi'
   'midi-v2b2' = New-TargetConfig $ArduinoArchiveRoot 'PicoNesV2B_Step2P1P2TriEdgeMidi' $ProjectArchiveRoot 'v2b_step2_p1p2tri_edge_midi'
@@ -63,7 +63,7 @@ $Targets = @{
   'midi-v2b19' = New-TargetConfig $ArduinoArchiveRoot 'PicoNesV2B_Step5AOSliderTrimLongEnv' $ProjectArchiveRoot 'v2b_step5ao_slider_trim_long_env'
   'midi-v2b20' = New-TargetConfig $ArduinoArchiveRoot 'PicoNesV2B_Step5APHiZoneSlider' $ProjectArchiveRoot 'v2b_step5ap_hizone_slider'
   'midi-v2b21' = New-TargetConfig $ArduinoArchiveRoot 'PicoNesV2B_Step5AQLongerEnv' $ProjectArchiveRoot 'v2b_step5aq_longer_env'
-  'midi-v2b22' = New-TargetConfig $ArduinoCurrentRoot 'PicoNesV2B_Step5ARFlatEnvPitch' $ProjectCurrentRoot 'v2b_step5ar_flat_env_pitch'
+  'midi-v2b22' = New-TargetConfig $ArduinoCurrentRoot 'Firmware_PICO-V2B' $ProjectCurrentRoot 'v2b_step5ar_flat_env_pitch'
 }
 
 function Get-TargetConfig {

@@ -6,9 +6,9 @@ The repository now exposes the active V2 expansion-port build first, and keeps o
 
 ## Current active target
 
-- Current ROM source: `Project-V2-A\v2b_step5ar_flat_env_pitch`
-- Current ROM output: `Project-V2-A\v2b_step5ar_flat_env_pitch\V2_MIDI_IN_P1P2.nes`
-- Current Pico sketch: `arduino\PicoNesV2B_Step5ARFlatEnvPitch`
+- Current ROM source: `ROM V2B\v2b_step5ar_flat_env_pitch`
+- Current ROM output: `ROM V2B\v2b_step5ar_flat_env_pitch\V2_MIDI_IN_P1P2.nes`
+- Current Pico sketch: `Firmware Arduino\Firmware_PICO-V2B`
 - Current Pico firmware string in the sketch: `FW=t84-v2b-step5bb-groovejitter`
 - Last fully documented accepted milestone: `FW=t79-v2b-step5aw-wavefix`
 
@@ -27,10 +27,10 @@ For a direct overview, start with [CURRENT_TARGETS.md](CURRENT_TARGETS.md).
 
 ```text
 APU-8/
-|-- Project-V2-A/                     # current ROM source tree
+|-- ROM V2B/                          # current ROM source tree
 |   `-- v2b_step5ar_flat_env_pitch/
-|-- arduino/                          # current Pico sketch + diagnostics
-|   |-- PicoNesV2B_Step5ARFlatEnvPitch/
+|-- Firmware Arduino/                 # current Pico sketch + diagnostics
+|   |-- Firmware_PICO-V2B/
 |   |-- PicoMcp3008RawDiag/
 |   `-- PicoPanelCtrlFullDiag/
 |-- Archive/                          # archived ROM/sketch history and legacy branches
@@ -61,7 +61,7 @@ The build shortcuts were kept alive:
 - [CURRENT_TARGETS.md](CURRENT_TARGETS.md)
 - [PROJECT_STATE.md](PROJECT_STATE.md)
 - [SHORT_COMMANDS.md](SHORT_COMMANDS.md)
-- [Project-V2-A/V2B_STEP5AR_FLAT_ENV_PITCH_2026-05-28.md](Project-V2-A/V2B_STEP5AR_FLAT_ENV_PITCH_2026-05-28.md)
+- [ROM V2B/V2B_STEP5AR_FLAT_ENV_PITCH_2026-05-28.md](ROM%20V2B/V2B_STEP5AR_FLAT_ENV_PITCH_2026-05-28.md)
 - [hardware/APU8_V2B_KICAD/README.md](hardware/APU8_V2B_KICAD/README.md)
 
 ## Notes
