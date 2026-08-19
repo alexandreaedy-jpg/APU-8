@@ -1,103 +1,201 @@
 # APU-8
 
-Système MIDI avancé pour Nintendo Entertainment System (NES) avec contrôle en temps réel de l'APU (Audio Processing Unit) via port parallèle.
+APU-8 is an experimental MIDI-controlled NES instrument project.
 
-## 🎵 Caractéristiques
+The goal is to turn a real NES / Famicom into a playable external sound module with:
 
-- **4 canaux indépendants** : Pulse 1, Pulse 2, Triangle, Noise
-- **ADSR complet** : Attack, Decay, Sustain, Release par voix
-- **LFO V2** : Tremolo et vibrato (en développement)
-- **Contrôle en temps réel** : Communication parallèle D0/D3/D4
-- **Arduino Nano** : Interface MIDI vers NES
+- Pulse 1
+- Pulse 2
+- Triangle
+- Noise
 
-## 🏗️ Architecture
+using custom ROM code, external control hardware, and eventually a more robust bus interface than the standard controller port.
 
-### Ports de données
-- **D0** : Notes ON/OFF, vélocité
-- **D3** : Enveloppes ADSR, duty cycle
-- **D4** : Configuration LFO V2
+## Current status
 
-### Matériel requis
-- NES/Famicom avec port d'extension modifié
-- Cartouche EverDrive ou flashable
-- Arduino Nano (contrôleur MIDI)
-- Interface parallèle (74HC595/74LS373)
+This repository contains both:
 
-## 📁 Structure du projet
+- the **working history** of the controller-port generations (`V15` to `V18`)
+- the **research and planning** for a future **V2 expansion-port architecture**
 
-```
-NES_DEV/
-├── arduino/           # Sketch Arduino Nano
-│   └── NanoNesV17DN4/
-├── project-v18-DN4/   # Version actuelle (ROM + sources)
-│   ├── main.c         # Code source principal
-│   ├── game.nes       # ROM compilée
-│   └── *.md           # Documentation
-├── cc65-2.13.3/       # Toolchain de compilation
-└── max-for-live/      # Devices Ableton Max for Live
-```
+The current situation is roughly:
 
-## 🚀 Compilation
+- `V16` proved that a split controller-port design could work
+- `V17` gave the best usable vibrato result by treating modulation as **preset/config** instead of a continuous live stream
+- `V18` is focused on transport precision and controller-port limits
+- `V2` is being studied as a likely long-term direction using the **NES-001 bottom expansion port**
 
-### Prérequis
-- cc65 (toolchain 6502)
-- ca65, ld65
-- Make ou PowerShell
+This is an active hardware/software research project, not a finished product.
 
-### Build ROM
-```powershell
-cd project-v18-DN4
-..\cc65-2.13.3\cc65\bin\cc65 -Oi main.c --add-source
-..\cc65-2.13.3\cc65\bin\ca65 main.s
-..\cc65-2.13.3\cc65\bin\ld65 -C nrom_256_vert.cfg -o game.nes crt0.o main.o dmc_samples.o runtime.lib
-```
+## Main idea
 
-## 🔌 Câblage
+The first major architecture used the NES controller port as a custom multi-lane transport:
 
-### Vers NES (Port d'extension)
-```
-Arduino D2  → NES D0 (Data 0 - Notes)
-Arduino D3  → NES D3 (Data 3 - ADSR)
-Arduino D4  → NES D4 (Data 4 - LFO)
-Arduino D5  → NES CLK (Clock)
-```
+- `D0` = notes / gate / triggers
+- `D3` = ADSR + slower controls
+- `D4` = LFO / modulation config
 
-### Contrôleurs analogiques
-```
-A0 = Attack
-A1 = Decay
-A2 = Sustain
-A3 = Release
-A4 = Duty
-A5 = Rate (LFO)
-A6 = Depth (LFO)
+The best result so far came from a simple lesson:
+
+**slow musical configuration is much more reliable than trying to stream too much live modulation state through a constrained transport.**
+
+That lesson is now shaping both:
+
+- the late `V17 / V18` controller-port work
+- the planned `V2` expansion-port design
+
+## Repository structure
+
+```text
+APU-8/
+├── arduino/                  # Arduino / Nano sketches
+│   ├── NanoNesV17DN4/
+│   ├── NanoNesV18DN4/
+│   └── ...
+├── project-v17-DN4/          # V17 ROM branch
+├── project-v18-DN4/          # Current ROM/research branch
+├── project-v16-DN3/          # Earlier stable milestone
+├── milestones/               # Frozen milestone snapshots
+├── max-for-live/             # Ableton / control experiments
+├── cc65-2.13.3/              # 6502 toolchain
+├── bridge.py                 # Host-side bridge experiments
+├── bridge_separate_channels.py
+└── README.md
 ```
 
-## 📚 Documentation
+## Important documents
 
-- `CONTROL_PROTOCOL.md` : Protocole de communication D0/D3/D4
-- `LFO_V2_ARCHITECTURE.md` : Architecture LFO V2
-- `V18_1_PROTO_WIRING.md` : Schémas de câblage V18
+### Current architecture / planning
 
-## 🎯 Versions
+- [project-v18-DN4/V18_1_ACTION_PLAN.md](project-v18-DN4/V18_1_ACTION_PLAN.md)
+- [project-v18-DN4/LFO_V2_ARCHITECTURE.md](project-v18-DN4/LFO_V2_ARCHITECTURE.md)
+- [project-v18-DN4/V18_CLK_PROTOCOL.md](project-v18-DN4/V18_CLK_PROTOCOL.md)
 
-- **v15** : D0 seulement (notes de base)
-- **v16-DN3** : D0 + D3 (ADSR)
-- **v17-DN4** : D0 + D3 + D4 (LFO V2)
-- **v18-DN4** : Version actuelle (optimisée)
+### V2 expansion-port work
 
-## ⚠️ Limitations connues
+- [project-v18-DN4/V2_EXPANSION_PORT_BOM_2026-05-04.md](project-v18-DN4/V2_EXPANSION_PORT_BOM_2026-05-04.md)
+- [project-v18-DN4/V2_EXPANSION_PORT_PIN_PLAN.md](project-v18-DN4/V2_EXPANSION_PORT_PIN_PLAN.md)
+- [project-v18-DN4/V2_EXPANSION_PORT_QUICK_REFERENCE_2026-05-04.md](project-v18-DN4/V2_EXPANSION_PORT_QUICK_REFERENCE_2026-05-04.md)
+- [project-v18-DN4/V2_GPIO_BUDGET_AND_CONTROLS.md](project-v18-DN4/V2_GPIO_BUDGET_AND_CONTROLS.md)
 
-- LFO V2 : Le tremolo n'est pas encore parfaitement sinusoïdal
-- Pitch bend : Non implémenté en hardware
-- Triangle : LFO non supporté (contraintes hardware 6502)
+### Research notes
 
-## 📜 Licence
+- [project-v18-DN4/FAMIMIMIDI_RESEARCH_NOTES.md](project-v18-DN4/FAMIMIMIDI_RESEARCH_NOTES.md)
 
-Projet open source. Inspiré de :
-- ChipMaestro (Stanislavche)
-- FamiMIDI (Captain)
-- NESizer2 (Jaffe)
+## Versions at a glance
 
----
-Développé par Alexandreaedy
+### V15
+
+- very early `D0`-focused transport work
+
+### V16
+
+- important stable milestone
+- `D0` notes stable
+- `D3` ADSR + duty stable
+- `D4` LFO stable
+
+### V17
+
+- cleaner modulation direction
+- vibrato presets proved much more viable than continuous live modulation streaming
+
+### V18
+
+- transport redesign
+- focus on note precision, trigger timing, and controller-port limits
+
+### V2 (planned)
+
+- flashcart still used for ROM/runtime
+- external hardware moved toward the NES-001 bottom expansion port
+- likely RP2040-based external interface
+
+## Hardware overview
+
+### Controller-port generations
+
+Typical V1.x setup:
+
+- NES / Famicom
+- flashcart / EverDrive
+- Arduino Nano
+- MIDI DIN input
+- custom wiring to controller-port data lines
+
+### Planned V2 direction
+
+Current V2 planning targets these expansion-port signals:
+
+- `CPU D0..D7`
+- `A15`
+- `OUT0..OUT2`
+- `/IRQ`
+- `+5V`
+- `GND`
+
+Important caveat:
+
+- the NES-001 bottom expansion port does **not** expose CPU `R/W`
+
+so V2 will need a custom handshake/latch strategy, not a generic memory-mapped design.
+
+## Toolchain
+
+This repository uses `cc65` for NES ROM builds.
+
+The ROM work is primarily inside:
+
+- [project-v17-DN4](project-v17-DN4)
+- [project-v18-DN4](project-v18-DN4)
+
+Each project directory contains its own `build.ps1` and ROM sources.
+
+## Why this project exists
+
+Many NES MIDI projects already exist, but they tend to fall into different tradeoffs:
+
+- simple but limited
+- powerful but tightly specialized
+- strongly dependent on PC-side software
+
+APU-8 is an attempt to find a balance between:
+
+- real hardware feel
+- direct musical control
+- robust note timing
+- and an architecture that can grow without collapsing under its own transport complexity
+
+## Known limitations
+
+At the current stage:
+
+- controller-port transport is still a major source of constraints
+- modulation quality depends heavily on how much logic is kept out of the urgent note path
+- some branches are exploratory and not all are musically stable
+- V2 is planned, but not yet implemented
+
+## References
+
+The project has been informed in part by public work and documentation around:
+
+- ChipMaestro
+- MIDINES
+- NESizer2
+- Famimimidi
+- SynthNes
+
+These references are documented more explicitly in the research notes inside `project-v18-DN4`.
+
+## Feedback welcome
+
+If you have experience with:
+
+- NES controller-port timing
+- custom expansion-port hardware
+- MIDI-to-APU workflows
+- cart-side synth runtimes
+
+feedback is very welcome.
+
+This project is still evolving, and outside technical input is extremely valuable at this stage.
