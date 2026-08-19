@@ -582,6 +582,10 @@ unsigned char controller_rx_read_standard_d0_byte(void) {
         controller_rx_delay(16);
     }
 
+#if CONTROLLER_RX_INVERT
+    value ^= 0xFF;
+#endif
+
     return value;
 }
 
@@ -776,26 +780,34 @@ unsigned char controller_rx_apply_compact_packet(void) {
         static unsigned char proto_last_gate = 0;
         static unsigned char proto_last_note = 0;
         static unsigned char proto_trigger = 0;
-        static unsigned char proto_bit_order = 0xFF;
         unsigned char proto_raw = controller_rx_read_standard_d0_byte();
-        unsigned char proto_reversed = controller_rx_reverse_byte(proto_raw);
         unsigned char proto_byte = proto_raw;
         unsigned char gate = (proto_byte & 0x80) ? 1 : 0;
         unsigned char note = proto_byte & 0x7F;
 
-        if (proto_bit_order == 0xFF) {
-            unsigned char raw_gate = (proto_raw & 0x80) ? 1 : 0;
-            unsigned char reversed_gate = (proto_reversed & 0x80) ? 1 : 0;
-
-            if (raw_gate != reversed_gate) {
-                proto_bit_order = reversed_gate ? 1 : 0;
-            }
-        }
-
-        if (proto_bit_order == 1) {
-            proto_byte = proto_reversed;
-            gate = (proto_byte & 0x80) ? 1 : 0;
-            note = proto_byte & 0x7F;
+        /* With no APU-8 connected, port 2 can read back as a constant full byte.
+           In D0-only mode that would otherwise look like a permanent gate-on note.
+           Treat 0xFF as "no valid transport present" and force silence. */
+        if (proto_byte == 0xFF) {
+            BUS_P1_TRIG = 0;
+            BUS_P1_NOTE = 0;
+            BUS_P1_GATE = 0;
+            BUS_P1_VEL = 0;
+            BUS_P2_TRIG = 0;
+            BUS_P2_NOTE = 0;
+            BUS_P2_GATE = 0;
+            BUS_P2_VEL = 0;
+            BUS_TRI_TRIG = 0;
+            BUS_TRI_NOTE = 0;
+            BUS_TRI_GATE = 0;
+            BUS_TRI_VEL = 0;
+            BUS_NOI_TRIG = 0;
+            BUS_NOI_NOTE = 0;
+            BUS_NOI_VEL = 0;
+            BUS_NOI_GATE = 0;
+            proto_last_gate = 0;
+            proto_last_note = 0;
+            return 1;
         }
 
         if (gate && (!proto_last_gate || note != proto_last_note)) {
@@ -945,6 +957,9 @@ unsigned char controller_rx_apply_compact_packet(void) {
 }
 
 void controller_rx_apply_slow_lanes(void) {
+#if V18_1_SHIFT_D0_ONLY
+    return;
+#else
     unsigned char i;
 
     controller_rx_read_parallel_packets(controller_rx_compact, controller_rx_compact_d3, controller_rx_compact_d4, CONTROLLER_RX_COMPACT_SIZE);
@@ -995,6 +1010,7 @@ void controller_rx_apply_slow_lanes(void) {
         d4v2_prev_packet[i] = d4v2_candidate_packet[i];
     }
     d4v2_has_candidate = 1;
+#endif
 }
 
 unsigned int pulse_timer_from_note(unsigned char midi) {

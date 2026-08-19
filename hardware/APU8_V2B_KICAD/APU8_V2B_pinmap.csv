@@ -1,0 +1,46 @@
+Net,From Ref,From Pin,Through,To Ref,To Pin,Status,Notes
++5V,J1,NES pin 48,direct,U1,VBUS,active,NES 5V rail
++5V,J1,NES pin 48,direct,U4,VCC,active,74HCT245 supply at 5V
++5V,J1,NES pin 48,direct,U5,VDD,active,MCP3008 supply if kept on 5V analog domain
+GND,J1,NES pin 47,direct,U1,GND,active,common ground
+GND,J1,NES pin 02,direct,U1,GND,active,second ground return
+GND,J1,NES pin 47,direct,U3,GND,active,74HC4050 ground
+GND,J1,NES pin 47,direct,U4,GND,active,74HCT245 ground
+GND,J1,NES pin 47,direct,U5,AGND,active,MCP3008 analog ground
+GND,J1,NES pin 47,direct,U5,DGND,active,MCP3008 digital ground
+3V3,U1,3V3_OUT,direct,U3,VCC,active,74HC4050 must run at 3.3V for level shift
+OUT0,J1,NES pin 43,U3 74HC4050,U1,GP2,active,NES to Pico
+OUT1,J1,NES pin 44,U3 74HC4050,U1,GP3,active,NES to Pico
+OUT2,J1,NES pin 45,U3 74HC4050,U1,GP4,active,NES to Pico
+/OE2,J1,NES pin 11,U3 74HC4050,U1,GP5,active,NES read strobe to Pico
+A15,J1,NES pin 05,U3 74HC4050,U1,GP6,optional,debug only in current frozen state
+PORT1_0,U1,GP10,U4 74HCT245,J1,NES pin 19,active,Pico to NES
+PORT1_1,U1,GP11,U4 74HCT245,J1,NES pin 20,active,Pico to NES
+PORT1_2,U1,GP12,U4 74HCT245,J1,NES pin 15,active,Pico to NES
+PORT1_3,U1,GP13,U4 74HCT245,J1,NES pin 16,active,Pico to NES
+PORT1_4,U1,GP14,U4 74HCT245,J1,NES pin 18,active,Pico to NES
+HCT245_OE,U1,GP7,direct,U4,/OE,active,default pull-up to +5V recommended
+CPU_D0,J1,NES pin 32,U6 74HC4050 opt,U1,GPIO spare,optional,debug sniff
+CPU_D1,J1,NES pin 31,U6 74HC4050 opt,U1,GPIO spare,optional,debug sniff
+CPU_D2,J1,NES pin 30,U6 74HC4050 opt,U1,GPIO spare,optional,debug sniff
+MCP_MISO,U5,DOUT,direct,U1,GP16,active,SPI RX
+MCP_CS,U1,GP17,direct,U5,CS,active,SPI CS
+MCP_SCK,U1,GP18,direct,U5,CLK,active,SPI clock
+MCP_MOSI,U1,GP19,direct,U5,DIN,active,SPI TX
+PANEL_LFO_PITCH_SW,J2,SW_LFO_PITCH,direct,U1,GP8,active,input pull-up in firmware
+PANEL_LFO_DUTY_SW,J2,SW_LFO_DUTY,direct,U1,GP9,active,input pull-up in firmware
+PANEL_LFO_AMP_SW,J2,SW_LFO_AMP,direct,U1,GP15,active,input pull-up in firmware
+PANEL_VOICE_P1_SW,J3,SW_P1,direct,U1,GP20,active,input pull-up in firmware
+PANEL_VOICE_P2_SW,J3,SW_P2,direct,U1,GP21,active,input pull-up in firmware
+PANEL_VOICE_TRI_SW,J3,SW_TRI,direct,U1,GP22,active,input pull-up in firmware
+PANEL_VOICE_NOISE_SW,J3,SW_NOISE,direct,U1,GP26,active,input pull-up in firmware
+PANEL_VOICE_GLOBAL_SW,J3,SW_GLOBAL,direct,U1,GP27,active,input pull-up in firmware
+PANEL_ARP_SW,J4,SW_ARP,direct,U1,GP28,active,input pull-up in firmware
+POT_ATTACK,J5,WIPER_CH0,direct,U5,CH0,active,MCP3008 channel 0
+POT_VOLUME,J5,WIPER_CH1,direct,U5,CH1,active,MCP3008 channel 1
+POT_DECAY,J5,WIPER_CH2,direct,U5,CH2,active,MCP3008 channel 2
+POT_RELEASE,J5,WIPER_CH3,direct,U5,CH3,active,MCP3008 channel 3
+POT_LFO_DEPTH,J5,WIPER_CH4,direct,U5,CH4,active,MCP3008 channel 4
+POT_LFO_RATE,J5,WIPER_CH5,direct,U5,CH5,active,MCP3008 channel 5
+POT_DUTY_OR_TIMBRE,J5,WIPER_CH6,direct,U5,CH6,active,MCP3008 channel 6
+POT_ARP_TIME_OR_WAVE,J5,WIPER_CH7,direct,U5,CH7,active,MCP3008 channel 7

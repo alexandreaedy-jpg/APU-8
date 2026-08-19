@@ -1,0 +1,42 @@
+APU-8 v16 freeze
+Date: 2026-04-29 04:46:58
+
+Working state:
+- D0 = notes stable
+- D3 = ADSR + duty stable
+- D4 = LFO stable
+- selector stable
+- ROM and Nano aligned
+
+Selector mapping:
+- D5 = P1
+- D6 = P2
+- D7 = TRI
+- D8 = GLOBAL
+
+LFO mapping:
+- D9 = Pitch
+- D10 = Duty
+- D11 = Amp
+- A6 = LFO Depth
+- A7 = LFO Rate
+
+NES/Nano wiring:
+- NES D0 -> Nano D2
+- NES D3 -> Nano D3
+- NES D4 -> Nano D4
+- NES OUT -> Nano D12
+- GND common
+
+Main files:
+- project-v16-DN3/main.c
+- project-v16-DN3/build.ps1
+- project-v16-DN3/game.nes
+- arduino/NanoNesV16DN3/NanoNesV16DN3.ino
+
+ROM SHA256:
+- EC5A16AD45320417B8990004299F2292E4946E3ED0A13BB8F23DE24D2AD7AC56
+
+Notes:
+- Physical D3/D4 inversion on the NES port board was corrected before this freeze.
+- D4 required timing/reading cleanup before becoming reliable.
