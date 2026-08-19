@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="E">
+  <design>
+    <source>C:\Users\mto1\Documents\NES_DEV\hardware\APU8_V2B_KICAD\_kicad_symbol_ref_test.kicad_sch</source>
+    <date>2026-06-03T01:40:55</date>
+    <tool>Eeschema 10.0.3</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title>KiCad Symbol Ref Test</title>
+        <company/>
+        <rev/>
+        <date/>
+        <source>_kicad_symbol_ref_test.kicad_sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+        <comment number="5" value=""/>
+        <comment number="6" value=""/>
+        <comment number="7" value=""/>
+        <comment number="8" value=""/>
+        <comment number="9" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components/>
+  <libparts/>
+  <libraries/>
+  <nets>
+    <net code="1" name="unconnected-(J1-Pad??)" class="Default">
+      <node ref="J1" pin="1" pintype="unspecified"/>
+    </net>
+  </nets>
+</export>

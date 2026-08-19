@@ -1,51 +1,83 @@
-# Fichiers générés par la compilation
+# Core build artifacts
 *.o
 *.s
-*.nes
-!game.nes
 *.lst
-
-# Fichiers temporaires
+*.map
+*.d
 *.tmp
 *.temp
 *.log
+*.bak
+*.orig
+*.rpt
+
+# Python / local runtime
+__pycache__/
+*.pyc
+
+# Editor / agent local state
+.vscode/
+.codex/
+.agents/
+
+# Local state files
 state.bin
 state_*.bin
 
-# Fichiers zip/archives de test (trop volumineux)
+# Toolchains / installers / archives
 *.zip
-__pycache__/
-
-# Exécutables et toolchains (trop volumineux)
+*.exe
 cc65-2.13.3/
 cc65-snapshot-*/
-arduino-cli*
+arduino-cli/
+arduino-cli*.zip
 WindsurfUserSetup*
 
-# ROMs commerciales (copyright)
+# Generated build output
+build/
+build-uno/
+build-*/
+out/
+dist/
+tmp-*/
+tmp_*/
+*.elf
+*.hex
+*.eep
+*.bin
+*.uf2
+compile_commands.json
+build.options.json
+includes.cache
+libraries.cache
+core.a
+
+# ROMs: keep only intentionally named deliverables
+*.nes
+!game.nes
+
+# Commercial ROMs
 1943*/
 Road Fighter*/
-*.nes
-!game*.nes
 
-# Fichiers de recherche temporaires
+# Temporary research / fetched web content
 _tmp_*
 *.html
 *.pdf
 !V2_*.pdf
 
-# VS Code
-.vscode/
-
-# Dossiers de test (conserver seulement le projet actif)
+# Legacy experiments / private references
 TEST_*/
 OLD_*/
 project-v15-*/
 project-v16-DN3-TEST-*/
 project-v16-DN3-OLD/
+Project-V2-A-commitpending/
 _ref_*/
 
-# Garder les dossiers importants
-!arduino/
-!max-for-live/
-!milestones/
+# KiCad / CAD local state and backups
+*.kicad_prl
+*.cir
+.history/
+_restore_backup_*/
+*.lck

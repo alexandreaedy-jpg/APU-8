@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<export version="D">
+  <design>
+    <source>APU8_V2B_KICAD</source>
+    <date>2026-06-03</date>
+    <tool>Codex</tool>
+    <comment>Functional KiCad-oriented netlist generated from frozen APU-8 V2B wiring state.</comment>
+  </design>
+  <components>
+    <comp ref="J1">
+      <value>NES_EXPANSION_PORT</value>
+      <libsource lib="Connector_Generic" part="Conn_01x16" description="Functional grouping of used NES expansion pins"/>
+    </comp>
+    <comp ref="U1">
+      <value>Raspberry_Pi_Pico</value>
+      <libsource lib="MCU_RaspberryPi_and_Boards" part="RaspberryPi_Pico" description="RP2040 Pico"/>
+    </comp>
+    <comp ref="U3">
+      <value>74HC4050_ACTIVE</value>
+      <libsource lib="74xx" part="74HC4050" description="NES to Pico level shifting at 3.3V"/>
+    </comp>
+    <comp ref="U4">
+      <value>74HCT245</value>
+      <libsource lib="74xx" part="74HCT245" description="Pico to NES level shifting at 5V"/>
+    </comp>
+    <comp ref="U5">
+      <value>MCP3008</value>
+      <libsource lib="ADC" part="MCP3008" description="8-channel SPI ADC"/>
+    </comp>
+    <comp ref="U6">
+      <value>74HC4050_DEBUG_OPTIONAL</value>
+      <libsource lib="74xx" part="74HC4050" description="Optional CPU data sniff buffer"/>
+    </comp>
+    <comp ref="J2">
+      <value>PANEL_LFO_SELECT</value>
+      <libsource lib="Connector_Generic" part="Conn_01x03" description="Panel LFO target selector lines"/>
+    </comp>
+    <comp ref="J3">
+      <value>PANEL_VOICE_SELECT</value>
+      <libsource lib="Connector_Generic" part="Conn_01x05" description="Panel voice selector lines"/>
+    </comp>
+    <comp ref="J4">
+      <value>PANEL_ARP_SWITCH</value>
+      <libsource lib="Connector_Generic" part="Conn_01x01" description="Panel arp enable switch"/>
+    </comp>
+    <comp ref="J5">
+      <value>PANEL_ANALOG_8CH</value>
+      <libsource lib="Connector_Generic" part="Conn_01x08" description="Panel analog controls to MCP3008"/>
+    </comp>
+  </components>
+  <nets>
+    <net code="1" name="+5V">
+      <node ref="J1" pin="NES_48"/>
+      <node ref="U1" pin="VBUS"/>
+      <node ref="U4" pin="VCC"/>
+      <node ref="U5" pin="VDD"/>
+    </net>
+    <net code="2" name="GND">
+      <node ref="J1" pin="NES_47"/>
+      <node ref="J1" pin="NES_02"/>
+      <node ref="U1" pin="GND"/>
+      <node ref="U3" pin="GND"/>
+      <node ref="U4" pin="GND"/>
+      <node ref="U5" pin="AGND"/>
+      <node ref="U5" pin="DGND"/>
+      <node ref="U6" pin="GND"/>
+    </net>
+    <net code="3" name="+3V3">
+      <node ref="U1" pin="3V3_OUT"/>
+      <node ref="U3" pin="VCC"/>
+      <node ref="U6" pin="VCC"/>
+    </net>
+    <net code="4" name="OUT0">
+      <node ref="J1" pin="NES_43"/>
+      <node ref="U3" pin="IN_OUT0"/>
+      <node ref="U1" pin="GP2"/>
+    </net>
+    <net code="5" name="OUT1">
+      <node ref="J1" pin="NES_44"/>
+      <node ref="U3" pin="IN_OUT1"/>
+      <node ref="U1" pin="GP3"/>
+    </net>
+    <net code="6" name="OUT2">
+      <node ref="J1" pin="NES_45"/>
+      <node ref="U3" pin="IN_OUT2"/>
+      <node ref="U1" pin="GP4"/>
+    </net>
+    <net code="7" name="OE2_N">
+      <node ref="J1" pin="NES_11"/>
+      <node ref="U3" pin="IN_OE2"/>
+      <node ref="U1" pin="GP5"/>
+    </net>
+    <net code="8" name="A15_OPTIONAL">
+      <node ref="J1" pin="NES_05"/>
+      <node ref="U3" pin="IN_A15"/>
+      <node ref="U1" pin="GP6"/>
+    </net>
+    <net code="9" name="PORT1_0">
+      <node ref="U1" pin="GP10"/>
+      <node ref="U4" pin="A0"/>
+      <node ref="J1" pin="NES_19"/>
+    </net>
+    <net code="10" name="PORT1_1">
+      <node ref="U1" pin="GP11"/>
+      <node ref="U4" pin="A1"/>
+      <node ref="J1" pin="NES_20"/>
+    </net>
+    <net code="11" name="PORT1_2">
+      <node ref="U1" pin="GP12"/>
+      <node ref="U4" pin="A2"/>
+      <node ref="J1" pin="NES_15"/>
+    </net>
+    <net code="12" name="PORT1_3">
+      <node ref="U1" pin="GP13"/>
+      <node ref="U4" pin="A3"/>
+      <node ref="J1" pin="NES_16"/>
+    </net>
+    <net code="13" name="PORT1_4">
+      <node ref="U1" pin="GP14"/>
+      <node ref="U4" pin="A4"/>
+      <node ref="J1" pin="NES_18"/>
+    </net>
+    <net code="14" name="HCT245_OE">
+      <node ref="U1" pin="GP7"/>
+      <node ref="U4" pin="OE_N"/>
+    </net>
+    <net code="15" name="PANEL_LFO_PITCH_SW">
+      <node ref="J2" pin="1"/>
+      <node ref="U1" pin="GP8"/>
+    </net>
+    <net code="16" name="PANEL_LFO_DUTY_SW">
+      <node ref="J2" pin="2"/>
+      <node ref="U1" pin="GP9"/>
+    </net>
+    <net code="17" name="PANEL_LFO_AMP_SW">
+      <node ref="J2" pin="3"/>
+      <node ref="U1" pin="GP15"/>
+    </net>
+    <net code="18" name="MCP_MISO">
+      <node ref="U5" pin="DOUT"/>
+      <node ref="U1" pin="GP16"/>
+    </net>
+    <net code="19" name="MCP_CS">
+      <node ref="U5" pin="CS"/>
+      <node ref="U1" pin="GP17"/>
+    </net>
+    <net code="20" name="MCP_SCK">
+      <node ref="U5" pin="CLK"/>
+      <node ref="U1" pin="GP18"/>
+    </net>
+    <net code="21" name="MCP_MOSI">
+      <node ref="U5" pin="DIN"/>
+      <node ref="U1" pin="GP19"/>
+    </net>
+    <net code="22" name="PANEL_VOICE_P1_SW">
+      <node ref="J3" pin="1"/>
+      <node ref="U1" pin="GP20"/>
+    </net>
+    <net code="23" name="PANEL_VOICE_P2_SW">
+      <node ref="J3" pin="2"/>
+      <node ref="U1" pin="GP21"/>
+    </net>
+    <net code="24" name="PANEL_VOICE_TRI_SW">
+      <node ref="J3" pin="3"/>
+      <node ref="U1" pin="GP22"/>
+    </net>
+    <net code="25" name="PANEL_VOICE_NOISE_SW">
+      <node ref="J3" pin="4"/>
+      <node ref="U1" pin="GP26"/>
+    </net>
+    <net code="26" name="PANEL_VOICE_GLOBAL_SW">
+      <node ref="J3" pin="5"/>
+      <node ref="U1" pin="GP27"/>
+    </net>
+    <net code="27" name="PANEL_ARP_SW">
+      <node ref="J4" pin="1"/>
+      <node ref="U1" pin="GP28"/>
+    </net>
+    <net code="28" name="POT_ATTACK">
+      <node ref="J5" pin="1"/>
+      <node ref="U5" pin="CH0"/>
+    </net>
+    <net code="29" name="POT_VOLUME">
+      <node ref="J5" pin="2"/>
+      <node ref="U5" pin="CH1"/>
+    </net>
+    <net code="30" name="POT_DECAY">
+      <node ref="J5" pin="3"/>
+      <node ref="U5" pin="CH2"/>
+    </net>
+    <net code="31" name="POT_RELEASE">
+      <node ref="J5" pin="4"/>
+      <node ref="U5" pin="CH3"/>
+    </net>
+    <net code="32" name="POT_LFO_DEPTH">
+      <node ref="J5" pin="5"/>
+      <node ref="U5" pin="CH4"/>
+    </net>
+    <net code="33" name="POT_LFO_RATE">
+      <node ref="J5" pin="6"/>
+      <node ref="U5" pin="CH5"/>
+    </net>
+    <net code="34" name="POT_DUTY_OR_TIMBRE">
+      <node ref="J5" pin="7"/>
+      <node ref="U5" pin="CH6"/>
+    </net>
+    <net code="35" name="POT_ARP_TIME_OR_WAVE">
+      <node ref="J5" pin="8"/>
+      <node ref="U5" pin="CH7"/>
+    </net>
+    <net code="36" name="CPU_D0_OPTIONAL">
+      <node ref="J1" pin="NES_32"/>
+      <node ref="U6" pin="IN_D0"/>
+    </net>
+    <net code="37" name="CPU_D1_OPTIONAL">
+      <node ref="J1" pin="NES_31"/>
+      <node ref="U6" pin="IN_D1"/>
+    </net>
+    <net code="38" name="CPU_D2_OPTIONAL">
+      <node ref="J1" pin="NES_30"/>
+      <node ref="U6" pin="IN_D2"/>
+    </net>
+  </nets>
+</export>

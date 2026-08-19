@@ -1,0 +1,33 @@
+APU-8 v16 freeze
+Date: 2026-04-29 03:54:39
+
+Working state:
+- Notes stable on D0
+- ADSR + duty stable on D3
+- Selector stable
+- ROM and Nano aligned
+
+Selector mapping:
+- D5 = P1
+- D6 = P2
+- D7 = TRI
+- D8 = GLOBAL
+
+NES/Nano wiring:
+- NES D0 -> Nano D2
+- NES D3 -> Nano D3
+- NES OUT -> Nano D12
+- GND common
+
+Main files:
+- project-v16-DN3/main.c
+- project-v16-DN3/build.ps1
+- project-v16-DN3/game.nes
+- arduino/NanoNesV16DN3/NanoNesV16DN3.ino
+
+ROM SHA256:
+- B4537B254C5A1D0DCCC70B512816FF34FAAC1E479FEFE53B2B21EC8F67603743
+
+Notes:
+- Physical D3/D4 inversion on the NES port board was corrected before this freeze.
+- Sketch cleaned to remove misleading inactive selector/sync leftovers without changing working behavior.

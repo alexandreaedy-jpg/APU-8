@@ -1,0 +1,309 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+2 0 obj
+<< /Length 2823 >>
+stream
+BT
+/F1 11 Tf
+48 794 Td
+(# V2 Expansion Port - Liste de materiel E44 only) Tj
+0 -15 Td () Tj
+0 -15 Td (Date de reference : 2026-05-04) Tj
+0 -15 Td () Tj
+0 -15 Td (Objectif :) Tj
+0 -15 Td (- preparer une version V2 d'APU-8 via l'expansion port NES) Tj
+0 -15 Td (- sortir du protocole manette pour la voie critique) Tj
+0 -15 Td (- pouvoir tout acheter chez E44 Nantes si la piste port manette finit par plafonner) Tj
+0 -15 Td () Tj
+0 -15 Td (Important :) Tj
+0 -15 Td (- cette V2 suppose une reprise interne sur l'expansion port NES-001) Tj
+0 -15 Td (- il n'existe pas de connecteur standard simple a acheter pour ce port) Tj
+0 -15 Td (- la solution la plus realiste reste une nappe soudee en interne vers un connecteur standard) Tj
+0 -15 Td () Tj
+0 -15 Td (Changement cle par rapport a la BOM precedente :) Tj
+0 -15 Td (- on remplace le maillon manquant 74LVC245A par une solution E44-only) Tj
+0 -15 Td (- lecture NES -> RP2040 : 2 x 74HC4050) Tj
+0 -15 Td (- ecriture RP2040 -> NES : 1 x 74HCT245) Tj
+0 -15 Td (- et on passe les briques 5 V pilotees par le RP2040 en famille HCT quand c'est pertinent) Tj
+0 -15 Td () Tj
+0 -15 Td (## Noyau obligatoire) Tj
+0 -15 Td () Tj
+0 -15 Td (1. Carte microcontroleur) Tj
+0 -15 Td (- 1 x RP2040 Pico WH) Tj
+0 -15 Td (- role : microcontroleur principal de la V2) Tj
+0 -15 Td (- prix de reference : 11.90 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/kits-modules/raspberry/raspberry-pi-pico-wh-) Tj
+0 -15 Td (  cortex-m0-bluetooth-5.2-wi-fi-2-4ghz-RASPBERRY-PI-PICO-WH.html) Tj
+0 -15 Td () Tj
+0 -15 Td (2. Translation NES -> RP2040) Tj
+0 -15 Td (- 2 x 74HC4050) Tj
+0 -15 Td (- role : abaisser proprement des signaux 5 V NES vers 3.3 V RP2040) Tj
+0 -15 Td (- remarque : 1 boitier = 6 canaux, donc 2 boitiers donnent 12 voies, assez pour CPU D0..D7) Tj
+0 -15 Td (  plus quelques lignes de controle) Tj
+0 -15 Td (- prix de reference : 0.45 EUR TTC piece) Tj
+0 -15 Td (- total reference : 0.90 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/composants/composants-actifs/circuits-integres/circuits-) Tj
+0 -15 Td (  integres-logiques-ttl/serie-74hc/6xnon-inverting-buffer-dil16-74HC4050.html) Tj
+0 -15 Td (- reference technique : https://www.nxp.com/docs/en/data-sheet/74HC4050.pdf) Tj
+0 -15 Td () Tj
+0 -15 Td (3. Translation RP2040 -> NES) Tj
+0 -15 Td (- 1 x 74HCT245) Tj
+0 -15 Td (- role : bus transceiver 8 bits 3-state pour envoyer du 3.3 V RP2040 vers logique 5 V NES) Tj
+0 -15 Td (- prix de reference : 0.50 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/composants/composants-actifs/circuits-integres/circuits-) Tj
+0 -15 Td (  integres-logiques-ttl/serie-74hct/ic-digital-3-state-bus-transceiver-) Tj
+0 -15 Td (  channels-8-dil20-74HCT245.html) Tj
+0 -15 Td (- reference technique : https://assets.nexperia.com/documents/data-sheet/74AHC_AHCT245.pdf) Tj
+0 -15 Td () Tj
+ET
+endstream
+endobj
+3 0 obj
+<< /Length 2780 >>
+stream
+BT
+/F1 11 Tf
+48 794 Td
+(4. Decodage simple) Tj
+0 -15 Td (- 1 x 74HCT138) Tj
+0 -15 Td (- role : decodage d'adresse ou de selection simple) Tj
+0 -15 Td (- prix de reference : 0.40 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/composants/composants-actifs/circuits-integres/circuits-) Tj
+0 -15 Td (  integres-logiques-ttl/serie-74hct/ic-digital-line-decoder-demultiplexer-) Tj
+0 -15 Td (  dip16-74HCT138.html) Tj
+0 -15 Td () Tj
+0 -15 Td (5. Registre latch) Tj
+0 -15 Td (- 1 x 74HCT573) Tj
+0 -15 Td (- role : latch simple pour interface de registres memory-mappes) Tj
+0 -15 Td (- prix de reference : 0.75 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/composants/composants-actifs/circuits-integres/circuits-) Tj
+0 -15 Td (  integres-logiques-ttl/serie-74hct/ic-digital-3-state-latch-transparent-) Tj
+0 -15 Td (  channels-8-dip20-74HCT573.html) Tj
+0 -15 Td () Tj
+0 -15 Td (6. Nettoyage / inversion / Schmitt) Tj
+0 -15 Td (- 1 x 74HCT14) Tj
+0 -15 Td (- role : remettre en forme certains fronts ou inverser proprement) Tj
+0 -15 Td (- prix de reference : 0.70 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/composants/composants-actifs/circuits-integres/circuits-) Tj
+0 -15 Td (  integres-logiques-ttl/serie-74hct/ic-digital-schmitt-trigger-not-) Tj
+0 -15 Td (  channels-6-inputs-1-dip14-74HCT14.html) Tj
+0 -15 Td () Tj
+0 -15 Td (## Passifs minimum) Tj
+0 -15 Td () Tj
+0 -15 Td (7. Decouplage logique) Tj
+0 -15 Td (- 8 x condensateurs ceramique 100 nF) Tj
+0 -15 Td (- role : un par CI logique + marge) Tj
+0 -15 Td (- prix de reference : 0.10 EUR TTC piece) Tj
+0 -15 Td (- total reference : 0.80 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/composants/composants-passifs/condensateurs/condensateurs-) Tj
+0 -15 Td (  ceramiques/condensateurs-ceramique-50-v-pas-5-08-mm/cond.-ceram.-5.08-mm-100nf-) Tj
+0 -15 Td (  CC5100NF.html) Tj
+0 -15 Td () Tj
+0 -15 Td (8. Reservoir d'alimentation local) Tj
+0 -15 Td (- 1 x condensateur radial entre 47 uF et 100 uF) Tj
+0 -15 Td (- role : stabilisation locale d'alimentation) Tj
+0 -15 Td (- conseil : prendre n'importe quelle reference dispo au comptoir en 16 V ou plus) Tj
+0 -15 Td () Tj
+0 -15 Td (9. Resistances) Tj
+0 -15 Td (- minimum utile : 1k, 4.7k, 10k) Tj
+0 -15 Td (- usage : serie de protection, pull-up, pull-down, lignes de controle) Tj
+0 -15 Td (- conseil pratique : prendre 5 a 10 pieces de chaque valeur) Tj
+0 -15 Td (- exemples E44 :) Tj
+0 -15 Td (  - 1k : https://www.e44.com/composants/composants-passifs/resistances/resistances-) Tj
+0 -15 Td (precision/0-25-w/resistance-couche-metallique-1-4w-1-kohms-1-MA1K0.html) Tj
+0 -15 Td (  - 4.7k : https://www.e44.com/composants/composants-passifs/resistances/resistances-) Tj
+0 -15 Td (precision/0-25-w/resistance-couche-metallique-1-4w-4.7-kohms-1-MA4K7.html) Tj
+ET
+endstream
+endobj
+4 0 obj
+<< /Length 2548 >>
+stream
+BT
+/F1 11 Tf
+48 794 Td
+(  - 10k : https://www.e44.com/composants/composants-passifs/resistances/resistances-) Tj
+0 -15 Td (precision/0-25-w/resistance-couche-metallique-1-4w-10-kohms-1-MA10K0.html) Tj
+0 -15 Td () Tj
+0 -15 Td (## Connectique pour la V2) Tj
+0 -15 Td () Tj
+0 -15 Td (10. Nappe standard) Tj
+0 -15 Td (- 1 m de cable en nappe 20 conducteurs multicolore) Tj
+0 -15 Td (- role : liaison interne propre vers breakout / module) Tj
+0 -15 Td (- prix de reference : 2.00 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/cablages/cables/cables-en-nappe/cable-en-) Tj
+0 -15 Td (  nappe-20-conducteurs-0.08mm2-pas-1.27mm-1m-mulicolore-FNG20-C.html) Tj
+0 -15 Td () Tj
+0 -15 Td (11. Connecteur IDC femelle pour la nappe) Tj
+0 -15 Td (- 1 x HE10F20) Tj
+0 -15 Td (- role : sertir la nappe 20 conducteurs) Tj
+0 -15 Td (- prix de reference : 0.50 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/connectique/connecteurs/fiches/IDC-20b/Femelle/he10-femelle-) Tj
+0 -15 Td (  sertir-20-pins-HE10F20.html) Tj
+0 -15 Td () Tj
+0 -15 Td (12. Embase male cote module) Tj
+0 -15 Td (- 1 x HE10MD20) Tj
+0 -15 Td (- role : interface detachable cote breakout / carte V2) Tj
+0 -15 Td (- prix de reference : 0.80 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/connectique/connecteurs/embases-ci/IDC-20b/Male/he10-male-) Tj
+0 -15 Td (  droit-20-pins-HE10MD20.html) Tj
+0 -15 Td () Tj
+0 -15 Td (## Proto et confort) Tj
+0 -15 Td () Tj
+0 -15 Td (13. Breadboard) Tj
+0 -15 Td (- 1 x SPB830+) Tj
+0 -15 Td (- role : premier proto de validation) Tj
+0 -15 Td (- prix de reference : 9.90 EUR TTC) Tj
+0 -15 Td (- source : https://www.e44.com/outillage/realisation-circuit-imprime/plaques-d-) Tj
+0 -15 Td (  experimentations/plaque-montage-rapide-830-trous-140-fils-raccordement-SPB830-.html) Tj
+0 -15 Td () Tj
+0 -15 Td (14. Plaque pour figer une revision) Tj
+0 -15 Td (- 1 x VEROP+ ou VEROB+) Tj
+0 -15 Td (- role : figer une version propre apres validation breadboard) Tj
+0 -15 Td (- budget de reference : 7.50 EUR TTC) Tj
+0 -15 Td (- pastilles : https://www.e44.com/outillage/realisation-circuit-imprime/plaques-) Tj
+0 -15 Td (  veroboard/plaque-veroboard-epoxy-pastilles-cuivrees-au-pas-2.54mm-dim-100-160mm-) Tj
+0 -15 Td (  VEROP-.html) Tj
+0 -15 Td (- bandes : https://www.e44.com/outillage/realisation-circuit-imprime/plaques-) Tj
+0 -15 Td (  veroboard/plaque-veroboard-epoxy-bandes-cuivrees-au-pas-2.54mm-dim-100-160mm-VEROB-.html) Tj
+0 -15 Td () Tj
+0 -15 Td (## Budget par niveau) Tj
+0 -15 Td () Tj
+0 -15 Td (### Niveau 1 - minimum credible) Tj
+0 -15 Td () Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Length 1807 >>
+stream
+BT
+/F1 11 Tf
+48 794 Td
+(Comprend :) Tj
+0 -15 Td (- RP2040 Pico WH) Tj
+0 -15 Td (- 2 x 74HC4050) Tj
+0 -15 Td (- 1 x 74HCT245) Tj
+0 -15 Td (- 1 x 74HCT138) Tj
+0 -15 Td (- 1 x 74HCT573) Tj
+0 -15 Td (- 1 x 74HCT14) Tj
+0 -15 Td (- 8 x 100 nF) Tj
+0 -15 Td (- 1 x electrolitique 47 a 100 uF) Tj
+0 -15 Td (- 1 m nappe 20 conducteurs) Tj
+0 -15 Td (- 1 x HE10F20) Tj
+0 -15 Td (- 1 x HE10MD20) Tj
+0 -15 Td (- resistances ciblees 1k / 4.7k / 10k) Tj
+0 -15 Td () Tj
+0 -15 Td (Budget estime :) Tj
+0 -15 Td (- environ 18 a 22 EUR TTC selon les resistances prises) Tj
+0 -15 Td () Tj
+0 -15 Td (### Niveau 2 - proto confortable) Tj
+0 -15 Td () Tj
+0 -15 Td (Niveau 1 plus :) Tj
+0 -15 Td (- 1 x breadboard SPB830+) Tj
+0 -15 Td () Tj
+0 -15 Td (Budget estime :) Tj
+0 -15 Td (- environ 28 a 32 EUR TTC) Tj
+0 -15 Td () Tj
+0 -15 Td (### Niveau 3 - proto propre / evolutif) Tj
+0 -15 Td () Tj
+0 -15 Td (Niveau 2 plus :) Tj
+0 -15 Td (- 1 x plaque VEROP+ ou VEROB+) Tj
+0 -15 Td () Tj
+0 -15 Td (Budget estime :) Tj
+0 -15 Td (- environ 35 a 40 EUR TTC) Tj
+0 -15 Td () Tj
+0 -15 Td (## Ce que je ne prendrais pas comme solution principale) Tj
+0 -15 Td () Tj
+0 -15 Td (15. VMA410) Tj
+0 -15 Td (- reference : https://www.e44.com/kits-modules/arduino/module-convertisseur-3.3-5-ttl-logic-) Tj
+0 -15 Td (  level-VMA410.html) Tj
+0 -15 Td (- verdict : utile pour du bench ou une petite ligne lente, mais pas comme coeur du bus V2) Tj
+0 -15 Td (- raisons :) Tj
+0 -15 Td (  - seulement 2 voies utiles par sens) Tj
+0 -15 Td (  - basee sur diviseur + MOSFET) Tj
+0 -15 Td (  - pas de vrai bus transceiver 3-state) Tj
+0 -15 Td (  - moins adaptee a un bus CPU NES que la combinaison 74HC4050 + 74HCT245) Tj
+0 -15 Td () Tj
+0 -15 Td (## Lignes d'expansion les plus interessantes pour V2) Tj
+0 -15 Td () Tj
+0 -15 Td (- CPU D0..D7) Tj
+0 -15 Td (- A15) Tj
+ET
+endstream
+endobj
+6 0 obj
+<< /Length 848 >>
+stream
+BT
+/F1 11 Tf
+48 794 Td
+(- OUT0) Tj
+0 -15 Td (- R/W si besoin ensuite) Tj
+0 -15 Td (- /IRQ plus tard, avec prudence et resistance serie) Tj
+0 -15 Td (- +5V) Tj
+0 -15 Td (- GND) Tj
+0 -15 Td () Tj
+0 -15 Td (## Verdict) Tj
+0 -15 Td () Tj
+0 -15 Td (Oui, une V2 expansion port en version E44-only est realiste.) Tj
+0 -15 Td () Tj
+0 -15 Td (Le bon compromis aujourd'hui est :) Tj
+0 -15 Td (- 2 x 74HC4050 pour lire le NES vers le RP2040) Tj
+0 -15 Td (- 1 x 74HCT245 pour ecrire du RP2040 vers le NES) Tj
+0 -15 Td (- HCT138 / HCT573 / HCT14 pour les briques 5 V pilotees par le RP2040) Tj
+0 -15 Td () Tj
+0 -15 Td (Le vrai cout cache restera surtout :) Tj
+0 -15 Td (- le temps mecanique) Tj
+0 -15 Td (- la reprise interne sur la console) Tj
+0 -15 Td (- les essais de cablage) Tj
+0 -15 Td () Tj
+0 -15 Td (Mais le cout pur composants reste raisonnable.) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+8 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 3 0 R >>
+endobj
+9 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 4 0 R >>
+endobj
+10 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 5 0 R >>
+endobj
+11 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R >> >> /Contents 6 0 R >>
+endobj
+12 0 obj
+<< /Type /Pages /Count 5 /Kids [ 7 0 R 8 0 R 9 0 R 10 0 R 11 0 R ] >>
+endobj
+13 0 obj
+<< /Type /Catalog /Pages 12 0 R >>
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000000015 00000 n 
+0000000083 00000 n 
+0000002958 00000 n 
+0000005790 00000 n 
+0000008390 00000 n 
+0000010249 00000 n 
+0000011148 00000 n 
+0000011275 00000 n 
+0000011402 00000 n 
+0000011529 00000 n 
+0000011657 00000 n 
+0000011785 00000 n 
+0000011871 00000 n 
+trailer
+<< /Size 14 /Root 13 0 R >>
+startxref
+11922
+%%EOF

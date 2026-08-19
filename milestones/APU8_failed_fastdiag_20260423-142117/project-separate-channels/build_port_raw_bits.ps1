@@ -1,0 +1,58 @@
+$ErrorActionPreference = 'Stop'
+
+$toolRoot = Join-Path $PSScriptRoot '..\cc65-2.13.3\cc65'
+$binDir = Join-Path $toolRoot 'bin'
+$asmIncDir = Join-Path $toolRoot 'asminc'
+
+$cc65 = Join-Path $binDir 'cc65.exe'
+$ca65 = Join-Path $binDir 'ca65.exe'
+$ld65 = Join-Path $binDir 'ld65.exe'
+
+$src = Join-Path $PSScriptRoot 'main.c'
+$obj = Join-Path $PSScriptRoot 'main.o'
+$dmcAsm = Join-Path $PSScriptRoot 'dmc_samples.s'
+$dmcObj = Join-Path $PSScriptRoot 'dmc_samples.o'
+$crt0 = Join-Path $PSScriptRoot 'crt0.s'
+$crt0Obj = Join-Path $PSScriptRoot 'crt0.o'
+$cfg = Join-Path $PSScriptRoot 'nrom_256_vert.cfg'
+$runtime = Join-Path $PSScriptRoot 'runtime.lib'
+
+foreach ($f in @($cc65, $ca65, $ld65, $src, $dmcAsm, $crt0, $cfg, $runtime)) {
+    if (-not (Test-Path -LiteralPath $f)) {
+        throw "Missing required file: $f"
+    }
+}
+
+$bits = @(
+    @{ Name = 'bit0'; Mask = 1 },
+    @{ Name = 'bit1'; Mask = 2 },
+    @{ Name = 'bit2'; Mask = 4 },
+    @{ Name = 'bit3'; Mask = 8 },
+    @{ Name = 'bit4'; Mask = 16 }
+)
+
+Push-Location $PSScriptRoot
+try {
+    foreach ($bit in $bits) {
+        $outRom = Join-Path $PSScriptRoot ("game_port_raw_{0}.nes" -f $bit.Name)
+
+        & $cc65 -Oi -DCONTROLLER_RX_ENABLED=1 -DCONTROLLER_RX_INVERT=1 -DDIAG_PORT_RAW=1 "-DCONTROLLER_RX_MASK=$($bit.Mask)" main.c --add-source
+        if ($LASTEXITCODE -ne 0) { throw "cc65 failed for $($bit.Name)" }
+
+        & $ca65 main.s
+        if ($LASTEXITCODE -ne 0) { throw "ca65 main failed for $($bit.Name)" }
+
+        & $ca65 dmc_samples.s -o $dmcObj
+        if ($LASTEXITCODE -ne 0) { throw "ca65 dmc samples failed for $($bit.Name)" }
+
+        & $ca65 "-I$asmIncDir" crt0.s -o $crt0Obj
+        if ($LASTEXITCODE -ne 0) { throw "ca65 crt0 failed for $($bit.Name)" }
+
+        & $ld65 -C $cfg -o $outRom $crt0Obj $obj $dmcObj $runtime
+        if ($LASTEXITCODE -ne 0) { throw "ld65 failed for $($bit.Name)" }
+
+        Write-Host "Raw port diagnostic ROM built: $outRom"
+    }
+} finally {
+    Pop-Location
+}

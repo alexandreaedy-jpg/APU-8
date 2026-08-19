@@ -1,0 +1,18 @@
+V17 pre-risk snapshot
+Created: 2026-04-30 04:27:39
+Snapshot root: C:\Users\mto1\Documents\NES_DEV\milestones\APU8_V17_DN4_pre-risk_20260430-042738
+
+Contents:
+- project-v17-DN4
+- arduino/NanoNesV17DN4
+- local_game.nes
+- D:\game.nes unavailable at snapshot time
+
+Hashes:
+- Local ROM game.nes: 3177EED834AB0F750833469BA7EEC005D0006CC377326CEE019A9F8B13A5AEFB
+- SD ROM D:\game.nes: UNAVAILABLE
+
+Current V17 intent:
+- LFO V2 phase 1 currently focused on AMP behavior
+- Current Nano mapping: A5=Rate, A6=Depth
+- User requested maximum backups before risky runtime/NMI changes

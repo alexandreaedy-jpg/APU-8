@@ -1,0 +1,760 @@
+#define APU_CTRL     (*(volatile unsigned char*)0x4015)
+#define P1_VOL       (*(volatile unsigned char*)0x4000)
+#define P1_SWEEP     (*(volatile unsigned char*)0x4001)
+#define P1_LO        (*(volatile unsigned char*)0x4002)
+#define P1_HI        (*(volatile unsigned char*)0x4003)
+#define P2_VOL       (*(volatile unsigned char*)0x4004)
+#define P2_SWEEP     (*(volatile unsigned char*)0x4005)
+#define P2_LO        (*(volatile unsigned char*)0x4006)
+#define P2_HI        (*(volatile unsigned char*)0x4007)
+#define TRI_LINEAR   (*(volatile unsigned char*)0x4008)
+#define TRI_LO       (*(volatile unsigned char*)0x400A)
+#define TRI_HI       (*(volatile unsigned char*)0x400B)
+#define NOI_VOL      (*(volatile unsigned char*)0x400C)
+#define NOI_LO       (*(volatile unsigned char*)0x400E)
+#define NOI_HI       (*(volatile unsigned char*)0x400F)
+#define DMC_FREQ     (*(volatile unsigned char*)0x4010)
+#define DMC_RAW      (*(volatile unsigned char*)0x4011)
+#define DMC_START    (*(volatile unsigned char*)0x4012)
+#define DMC_LEN      (*(volatile unsigned char*)0x4013)
+#define APU_FRAME    (*(volatile unsigned char*)0x4017)
+#define JOY_STROBE   (*(volatile unsigned char*)0x4016)
+#define JOY2_PORT    (*(volatile unsigned char*)0x4017)
+
+#define REG_DUTY     0x00
+#define REG_ADSR_A   0x01
+#define REG_ADSR_D   0x02
+#define REG_ADSR_S   0x03
+#define REG_ADSR_R   0x04
+#define REG_TRI_NOTE 0x05
+#define REG_TRI_GATE 0x06
+#define REG_TRI_TRIG 0x07
+#define REG_P1_NOTE  0x08
+#define REG_P1_GATE  0x09
+#define REG_P1_TRIG  0x0A
+#define REG_PULSE_FRAME REG_P1_TRIG
+#define REG_P2_NOTE  0x0B
+#define REG_P2_GATE  0x0C
+#define REG_P2_TRIG  0x0D
+#define REG_NOI_NOTE 0x0E
+#define REG_NOI_GATE 0x0F
+
+#define V2_IDLE          0x00
+#define V2_READ_STATUS   0x01
+#define V2_READ_P1_LO    0x02
+#define V2_READ_P1_HI    0x03
+#define V2_READ_P2_LO    0x04
+#define V2_READ_P2_HI    0x05
+#define V2_READ_AUX_LO   0x06
+#define V2_READ_AUX_HI   0x07
+
+#define V2_STATUS_P1_PENDING 0x01
+#define V2_STATUS_P2_PENDING 0x02
+#define V2_STATUS_AUX_PENDING 0x04
+#define V2_STATUS_AUX_IS_TRI 0x08
+#define V2_STATUS_VALID      0x10
+#define V2_STATUS_SIGNATURE  V2_STATUS_VALID
+
+#define V2_VOICE_P1   0x00
+#define V2_VOICE_P2   0x01
+#define V2_VOICE_TRI  0x02
+#define V2_VOICE_NOISE 0x03
+
+#define DIRTY_P1    0x01
+#define DIRTY_P2    0x02
+#define DIRTY_TRI   0x04
+#define DIRTY_NOISE 0x08
+
+#define ENV_OFF     0
+#define ENV_ATTACK  1
+#define ENV_DECAY   2
+#define ENV_SUSTAIN 3
+#define ENV_RELEASE 4
+
+#define VIBRATO_TICK_DIV 12
+#define GLIDE_TICK_DIV 8
+#define P1_GLIDE_STEP 0
+#define P2_GLIDE_STEP 0
+#define MIDI_DIRECT_PULSE 1
+#define BUS_READ_DELAY 1
+#define BUS_IDLE_DELAY 1
+#define BUS_ACK_DELAY 1
+
+typedef struct Voice {
+  unsigned char note;
+  unsigned char gate;
+  unsigned char trig;
+  unsigned char last_note;
+  unsigned char last_gate;
+  unsigned char last_trig;
+  unsigned char phase;
+  unsigned char level;
+  unsigned char counter;
+} Voice;
+
+typedef struct PulsePitch {
+  unsigned int base_timer;
+  unsigned int current_timer;
+  signed char lfo_offset;
+  signed char bend_offset;
+  signed char detune_offset;
+  unsigned char glide_step;
+  unsigned char glide_div;
+  unsigned char written_lo;
+  unsigned char written_hi;
+} PulsePitch;
+
+typedef struct DmcSample {
+  unsigned char rate;
+  unsigned char start;
+  unsigned char length;
+  unsigned char level;
+} DmcSample;
+
+static const unsigned int timer_table[] = {
+  1712,1616,1524,1440,1356,1280,1208,1140,1076,1016,960,906,
+  856,808,762,720,678,640,604,570,538,508,480,453,
+  428,404,381,360,339,320,302,285,269,254,240,226,
+  214,202,190,180,170,160,151,143,135,127,120,113,
+  107,101,95,90,85,80,75,71,67,63,60,56,
+  53,50,47,45,42,40,37,35,33,31,30,28
+};
+
+static const unsigned char noise_period_table[16] = {
+  0x0F,0x0E,0x0D,0x0C,0x0B,0x0A,0x09,0x08,
+  0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x00
+};
+
+static const signed char vibrato_shape[32] = {
+   0,  3,  6,  9, 11, 13, 14, 15,
+  16, 15, 14, 13, 11,  9,  6,  3,
+   0, -3, -6, -9,-11,-13,-14,-15,
+ -16,-15,-14,-13,-11, -9, -6, -3
+};
+
+static const DmcSample dmc_kick = {0x0C, 0xC0, 0x34, 0x44};
+static const DmcSample dmc_snare = {0x0C, 0xCE, 0x1C, 0x42};
+static const DmcSample dmc_rim = {0x0C, 0xD6, 0x0F, 0x3A};
+static const DmcSample dmc_voice = {0x0C, 0xDA, 0x94, 0x34};
+
+static Voice p1 = {40,0,0,0,0,0xFF,ENV_OFF,0,0};
+static Voice p2 = {52,0,0,0,0,0xFF,ENV_OFF,0,0};
+static Voice noi = {24,0,0,0,0,0xFF,ENV_OFF,0,0};
+static unsigned char tri_note = 40;
+static unsigned char tri_gate = 0;
+static unsigned char tri_trig = 0;
+static unsigned char tri_last_note = 0;
+static unsigned char tri_last_gate = 0;
+static unsigned char tri_last_trig = 0xFF;
+static unsigned char duty = 2;
+static unsigned char env_a = 0;
+static unsigned char env_d = 0;
+static unsigned char env_s = 15;
+static unsigned char env_r = 0;
+static PulsePitch p1_pitch = {0,0,0,0,0,P1_GLIDE_STEP,0,0xFF,0};
+static PulsePitch p2_pitch = {0,0,0,0,0,P2_GLIDE_STEP,0,0xFF,0};
+static unsigned char lfo_depth = 0;
+static unsigned char lfo_rate = 0;
+static unsigned char p1_vibrato_phase = 0;
+static unsigned char p2_vibrato_phase = 128;
+static unsigned char vibrato_div = 0;
+
+static void update_musical_vibrato(void);
+static unsigned char transport_needs_pitch_tick(void);
+
+static void delay_short(unsigned char outer) {
+  volatile unsigned char i;
+  volatile unsigned char j;
+  for (i = 0; i < outer; ++i) {
+    for (j = 0; j < 255; ++j) {
+    }
+  }
+}
+
+static unsigned int timer_from_note(unsigned char note) {
+  if (note < 24) note = 24;
+  if (note > 95) note = 95;
+  return timer_table[note - 24];
+}
+
+static unsigned char bus_encode(unsigned char opcode) {
+  return (unsigned char)(((opcode & 0x01) << 2) | (opcode & 0x02) | ((opcode & 0x04) >> 2));
+}
+
+static unsigned char read_phase(unsigned char opcode) {
+  JOY_STROBE = bus_encode(opcode);
+  delay_short(BUS_READ_DELAY);
+  return (unsigned char)(JOY2_PORT & 0x1F);
+}
+
+static void write_idle(void) {
+  JOY_STROBE = bus_encode(V2_IDLE);
+  delay_short(BUS_IDLE_DELAY);
+}
+
+static void ack_phase(unsigned char opcode) {
+  JOY_STROBE = bus_encode(opcode);
+  delay_short(BUS_ACK_DELAY);
+  write_idle();
+}
+
+static void unlock_transport(void) {
+  unsigned char k;
+  for (k = 0; k != 4; ++k) {
+    JOY_STROBE = bus_encode(0x04); delay_short(180);
+    JOY_STROBE = bus_encode(0x02); delay_short(180);
+    JOY_STROBE = bus_encode(0x01); delay_short(180);
+    JOY_STROBE = bus_encode(0x07); delay_short(180);
+  }
+  write_idle();
+}
+
+static unsigned char ctrl_to_nibble(unsigned char value) {
+  return (unsigned char)((value <= 0x0F) ? value : (value >> 3));
+}
+
+static void restart_env(Voice* v) {
+#if MIDI_DIRECT_PULSE
+  v->phase = ENV_SUSTAIN;
+  v->level = 15;
+  v->counter = 0;
+#else
+  v->phase = ENV_ATTACK;
+  v->level = 0;
+  v->counter = 0;
+#endif
+}
+
+static void release_env(Voice* v) {
+#if MIDI_DIRECT_PULSE
+  v->phase = ENV_OFF;
+  v->level = 0;
+  v->counter = 0;
+#else
+  if (v->phase != ENV_OFF) {
+    v->phase = ENV_RELEASE;
+    v->counter = 0;
+  }
+#endif
+}
+
+static void tick_env(Voice* v) {
+  unsigned char rate;
+  switch (v->phase) {
+    case ENV_ATTACK:
+      rate = (unsigned char)(1 + env_a);
+      if (++v->counter >= rate) {
+        v->counter = 0;
+        if (v->level < 15) ++v->level;
+        if (v->level >= 15) v->phase = ENV_DECAY;
+      }
+      break;
+    case ENV_DECAY:
+      rate = (unsigned char)(1 + env_d);
+      if (++v->counter >= rate) {
+        v->counter = 0;
+        if (v->level > env_s) --v->level;
+        if (v->level <= env_s) v->phase = ENV_SUSTAIN;
+      }
+      break;
+    case ENV_RELEASE:
+      rate = (unsigned char)(1 + env_r);
+      if (++v->counter >= rate) {
+        v->counter = 0;
+        if (v->level > 0) --v->level;
+        if (v->level == 0) v->phase = ENV_OFF;
+      }
+      break;
+    default:
+      break;
+  }
+}
+
+static unsigned char ctrl_to_vibrato_depth(unsigned char v) {
+  if (v < 16) return 0;
+  return (unsigned char)(1 + (((unsigned int)(v - 16) * 18U) / 111U));
+}
+
+static unsigned char ctrl_to_vibrato_phase_step(unsigned char v) {
+  if (v < 8) return 0;
+  if (v < 18) return 2;
+  if (v < 30) return 3;
+  if (v < 44) return 4;
+  if (v < 58) return 5;
+  if (v < 72) return 6;
+  if (v < 86) return 10;
+  if (v < 100) return 22;
+  if (v < 112) return 40;
+  if (v < 120) return 72;
+  return 120;
+}
+
+static unsigned char lfo_depth_to_ctrl(void) {
+  if (lfo_depth == 0) return 0;
+  return (unsigned char)(16 + (lfo_depth * 14));
+}
+
+static unsigned char lfo_rate_to_ctrl(void) {
+  switch (lfo_rate) {
+    case 0: return 0;
+    case 1: return 30;
+    case 2: return 44;
+    case 3: return 58;
+    case 4: return 72;
+    case 5: return 78;
+    case 6: return 86;
+    default: return 86;
+  }
+}
+
+static signed char vibrato_step(unsigned char depth_ctrl, unsigned char rate_ctrl, unsigned char* phase) {
+  unsigned char depth;
+  unsigned char phase_step;
+  signed char shape;
+  int scaled;
+
+  depth = ctrl_to_vibrato_depth(depth_ctrl);
+  phase_step = ctrl_to_vibrato_phase_step(rate_ctrl);
+  if (depth == 0 || phase_step == 0) {
+    return 0;
+  }
+
+  *phase = (unsigned char)(*phase + phase_step);
+  shape = vibrato_shape[(*phase >> 3) & 0x1F];
+  scaled = ((int)shape * (int)depth);
+  if (scaled >= 0) scaled += 8;
+  else scaled -= 8;
+  return (signed char)(scaled / 16);
+}
+
+static int pulse_pitch_offset(PulsePitch* pitch) {
+  return (int)pitch->lfo_offset +
+         (int)pitch->bend_offset +
+         (int)pitch->detune_offset;
+}
+
+static unsigned int clamp_pulse_timer(int timer) {
+  if (timer < 8) return 8;
+  if (timer > 2047) return 2047;
+  return (unsigned int)timer;
+}
+
+static unsigned int pulse_pitch_source_timer(PulsePitch* pitch) {
+  if (pitch->current_timer != 0) return pitch->current_timer;
+  return pitch->base_timer;
+}
+
+static void tick_pulse_glide(PulsePitch* pitch) {
+  unsigned int target;
+  unsigned int current;
+  unsigned int step;
+
+  target = pitch->base_timer;
+  current = pitch->current_timer;
+  if (pitch->glide_step == 0) return;
+  if (target == 0 || current == 0 || current == target) return;
+
+  ++pitch->glide_div;
+  if (pitch->glide_div < GLIDE_TICK_DIV) return;
+  pitch->glide_div = 0;
+
+  step = pitch->glide_step;
+
+  if (current < target) {
+    if ((target - current) <= step) current = target;
+    else current = (unsigned int)(current + step);
+  } else {
+    if ((current - target) <= step) current = target;
+    else current = (unsigned int)(current - step);
+  }
+  pitch->current_timer = current;
+}
+
+static void write_pulse_timer(unsigned char which, PulsePitch* pitch, unsigned int timer, unsigned char force) {
+  unsigned char hi;
+  unsigned char lo;
+
+  lo = (unsigned char)(timer & 0xFF);
+  hi = (unsigned char)((timer >> 8) & 0x07);
+  if (which == 1) {
+    if (force || lo != pitch->written_lo) {
+      pitch->written_lo = lo;
+      P1_LO = lo;
+    }
+    if (force || hi != pitch->written_hi) {
+      pitch->written_hi = hi;
+      P1_HI = hi;
+    }
+  } else {
+    if (force || lo != pitch->written_lo) {
+      pitch->written_lo = lo;
+      P2_LO = lo;
+    }
+    if (force || hi != pitch->written_hi) {
+      pitch->written_hi = hi;
+      P2_HI = hi;
+    }
+  }
+}
+
+static void apply_pulse_pitch(Voice* v, unsigned char which, PulsePitch* pitch, unsigned char force) {
+  unsigned int source_timer;
+  unsigned int timer;
+
+  source_timer = pulse_pitch_source_timer(pitch);
+  if (!v->gate || source_timer == 0) return;
+
+  timer = clamp_pulse_timer((int)source_timer + pulse_pitch_offset(pitch));
+  write_pulse_timer(which, pitch, timer, force);
+}
+
+static void set_pulse_base_note(Voice* v, unsigned char which, PulsePitch* pitch, unsigned char retrigger) {
+  pitch->base_timer = timer_from_note(v->note);
+  if (retrigger || pitch->current_timer == 0) {
+    pitch->current_timer = pitch->base_timer;
+    pitch->glide_div = 0;
+  }
+  if (which == 1) {
+    P1_SWEEP = 0x08;
+  } else {
+    P2_SWEEP = 0x08;
+  }
+  apply_pulse_pitch(v, which, pitch, retrigger);
+}
+
+static void update_musical_vibrato(void) {
+  unsigned char depth_ctrl;
+  unsigned char rate_ctrl;
+
+  depth_ctrl = lfo_depth_to_ctrl();
+  rate_ctrl = lfo_rate_to_ctrl();
+
+  if (depth_ctrl == 0 || rate_ctrl == 0) {
+    vibrato_div = 0;
+    p1_pitch.lfo_offset = 0;
+    p2_pitch.lfo_offset = 0;
+  } else {
+    ++vibrato_div;
+    if (vibrato_div >= VIBRATO_TICK_DIV) {
+      vibrato_div = 0;
+      p1_pitch.lfo_offset = vibrato_step(depth_ctrl, rate_ctrl, &p1_vibrato_phase);
+      p2_pitch.lfo_offset = vibrato_step(depth_ctrl, rate_ctrl, &p2_vibrato_phase);
+    }
+  }
+
+  tick_pulse_glide(&p1_pitch);
+  tick_pulse_glide(&p2_pitch);
+  apply_pulse_pitch(&p1, 1, &p1_pitch, 0);
+  apply_pulse_pitch(&p2, 2, &p2_pitch, 0);
+}
+
+static unsigned char transport_needs_pitch_tick(void) {
+  if (lfo_depth != 0 && lfo_rate != 0) return 1;
+  if (p1_pitch.glide_step != 0 && p1_pitch.current_timer != p1_pitch.base_timer) return 1;
+  if (p2_pitch.glide_step != 0 && p2_pitch.current_timer != p2_pitch.base_timer) return 1;
+  return 0;
+}
+
+static void update_pulse(Voice* v, unsigned char which) {
+  unsigned char retrigger;
+  unsigned char vol;
+  unsigned char duty_bits;
+
+  if (v->gate && (!v->last_gate || v->note != v->last_note || v->trig != v->last_trig)) {
+    retrigger = (unsigned char)(!v->last_gate || v->trig != v->last_trig);
+    if (retrigger) restart_env(v);
+    if (which == 1) {
+      if (retrigger) P1_VOL = 0x30;
+      set_pulse_base_note(v, 1, &p1_pitch, retrigger);
+    } else {
+      if (retrigger) P2_VOL = 0x30;
+      set_pulse_base_note(v, 2, &p2_pitch, retrigger);
+    }
+  } else if (!v->gate && v->last_gate) {
+    release_env(v);
+  }
+
+  tick_env(v);
+  duty_bits = (unsigned char)((duty & 0x03) << 6);
+  vol = (unsigned char)(duty_bits | 0x20 | 0x10 | (v->level & 0x0F));
+  if (which == 1) {
+    P1_VOL = vol;
+  } else {
+    P2_VOL = vol;
+  }
+
+  v->last_note = v->note;
+  v->last_gate = v->gate;
+  v->last_trig = v->trig;
+}
+
+static void update_triangle(void) {
+  unsigned int timer;
+  if (tri_gate) {
+    if (!tri_last_gate || tri_note != tri_last_note || tri_trig != tri_last_trig) {
+      timer = timer_from_note(tri_note) >> 1;
+      TRI_LINEAR = 0x80 | 0x7F;
+      TRI_LO = (unsigned char)(timer & 0xFF);
+      TRI_HI = (unsigned char)((timer >> 8) & 0x07);
+    }
+  } else if (tri_last_gate) {
+    TRI_LINEAR = 0;
+  }
+  tri_last_note = tri_note;
+  tri_last_gate = tri_gate;
+  tri_last_trig = tri_trig;
+}
+
+static const DmcSample* dmc_sample_from_note(unsigned char note) {
+  if (note >= 36 && note <= 37) return &dmc_kick;
+  if (note >= 38 && note <= 40) return &dmc_snare;
+  if (note == 41) return &dmc_rim;
+  if (note == 46) return &dmc_voice;
+  return 0;
+}
+
+static void trigger_dmc(const DmcSample* sample) {
+  APU_CTRL = 0x0F;
+  DMC_FREQ = (unsigned char)(sample->rate & 0x0F);
+  DMC_RAW = (unsigned char)(sample->level & 0x7F);
+  DMC_START = sample->start;
+  DMC_LEN = sample->length;
+  APU_CTRL = 0x1F;
+}
+
+static void update_noise(void) {
+  unsigned char changed;
+  changed = (unsigned char)(noi.gate && (!noi.last_gate || noi.note != noi.last_note || noi.trig != noi.last_trig));
+  if (changed) {
+    restart_env(&noi);
+    NOI_LO = noise_period_table[noi.note & 0x0F] & 0x0F;
+    NOI_HI = 0x18;
+    noi.level = 15;
+    noi.phase = ENV_SUSTAIN;
+  } else if (!noi.gate && noi.last_gate) {
+    release_env(&noi);
+  }
+
+  tick_env(&noi);
+  NOI_VOL = (unsigned char)(0x20 | 0x10 | (noi.level & 0x0F));
+
+  noi.last_note = noi.note;
+  noi.last_gate = noi.gate;
+  noi.last_trig = noi.trig;
+}
+
+static void update_audio(void) {
+  update_pulse(&p1, 1);
+  update_pulse(&p2, 2);
+  update_musical_vibrato();
+  update_triangle();
+  update_noise();
+}
+
+static void commit_live_edges(unsigned char dirty_mask) {
+  if (dirty_mask & DIRTY_P1) {
+    update_pulse(&p1, 1);
+  }
+  if (dirty_mask & DIRTY_P2) {
+    update_pulse(&p2, 2);
+  }
+  if (dirty_mask & DIRTY_TRI) {
+    update_triangle();
+  }
+  if (dirty_mask & DIRTY_NOISE) {
+    update_noise();
+  }
+}
+
+static void apply_voice_edge(Voice* v, unsigned char value) {
+  v->note = (unsigned char)(value & 0x7FU);
+  v->gate = (value & 0x80U) ? 1 : 0;
+  if (v->gate) ++v->trig;
+}
+
+static void apply_triangle_edge(unsigned char value) {
+  tri_note = (unsigned char)(value & 0x7FU);
+  tri_gate = (value & 0x80U) ? 1 : 0;
+  if (tri_gate) ++tri_trig;
+}
+
+static void apply_noise_edge(unsigned char value) {
+  noi.note = (unsigned char)(value & 0x0FU);
+  noi.gate = (value & 0x80U) ? 1 : 0;
+  if (noi.gate) ++noi.trig;
+}
+
+static void apply_slot_edge(unsigned char voice_code, unsigned char value) {
+  switch (voice_code) {
+    case V2_VOICE_P1: apply_voice_edge(&p1, value); break;
+    case V2_VOICE_P2: apply_voice_edge(&p2, value); break;
+    case V2_VOICE_TRI: apply_triangle_edge(value); break;
+    case V2_VOICE_NOISE: apply_noise_edge(value); break;
+    default: break;
+  }
+}
+
+static void apply_pulse_frame(unsigned int value) {
+  p1.note = (unsigned char)(value & 0x7F);
+  p1.gate = (value & 0x80) ? 1 : 0;
+  p2.note = (unsigned char)((value >> 8) & 0x7F);
+  p2.gate = (value & 0x8000) ? 1 : 0;
+  if (p1.gate && (!p1.last_gate || p1.note != p1.last_note)) ++p1.trig;
+  if (p2.gate && (!p2.last_gate || p2.note != p2.last_note)) ++p2.trig;
+}
+
+static void apply_reg(unsigned char reg_id, unsigned int value) {
+  switch (reg_id & 0x0F) {
+    case REG_DUTY:
+      duty = (unsigned char)(value & 0x03U);
+      lfo_depth = (unsigned char)((value >> 2) & 0x07U);
+      lfo_rate = (unsigned char)((value >> 5) & 0x07U);
+      break;
+    case REG_ADSR_A: env_a = ctrl_to_nibble((unsigned char)value); break;
+    case REG_ADSR_D: env_d = ctrl_to_nibble((unsigned char)value); break;
+    case REG_ADSR_S: env_s = ctrl_to_nibble((unsigned char)value); break;
+    case REG_ADSR_R: env_r = ctrl_to_nibble((unsigned char)value); break;
+    case REG_TRI_NOTE: tri_note = (unsigned char)(value & 0x7FU); break;
+    case REG_TRI_GATE: tri_gate = value ? 1 : 0; break;
+    case REG_TRI_TRIG: tri_trig = (unsigned char)value; break;
+    case REG_PULSE_FRAME:
+      apply_pulse_frame(value);
+      break;
+    case REG_P1_NOTE:
+      p1.note = (unsigned char)(value & 0x7FU);
+      p1.gate = (value & 0x80U) ? 1 : 0;
+      if (p1.gate) ++p1.trig;
+      break;
+    case REG_P1_GATE: p1.gate = value ? 1 : 0; break;
+    case REG_P2_NOTE:
+      p2.note = (unsigned char)(value & 0x7FU);
+      p2.gate = (value & 0x80U) ? 1 : 0;
+      if (p2.gate) ++p2.trig;
+      break;
+    case REG_P2_GATE: p2.gate = value ? 1 : 0; break;
+    case REG_P2_TRIG: p2.trig = (unsigned char)value; break;
+    case REG_NOI_NOTE: noi.note = (unsigned char)(value & 0x0FU); ++noi.trig; break;
+    case REG_NOI_GATE: noi.gate = value ? 1 : 0; break;
+    default: break;
+  }
+}
+
+static unsigned char read_voice_value(unsigned char lo_opcode,
+                                      unsigned char hi_opcode,
+                                      unsigned char* out_value) {
+  unsigned char lo_field;
+  unsigned char hi_field;
+
+  lo_field = read_phase(lo_opcode);
+  write_idle();
+  if ((lo_field & V2_STATUS_VALID) == 0) return 0;
+
+  hi_field = read_phase(hi_opcode);
+  write_idle();
+  if ((hi_field & V2_STATUS_VALID) == 0) return 0;
+
+  *out_value = (unsigned char)(((hi_field & 0x0F) << 4) | (lo_field & 0x0F));
+  return 1;
+}
+
+static unsigned char service_one_event(void) {
+  unsigned char status;
+  unsigned char p1_pending;
+  unsigned char p2_pending;
+  unsigned char aux_pending;
+  unsigned char p1_value;
+  unsigned char p2_value;
+  unsigned char aux_lo;
+  unsigned char aux_hi;
+  unsigned char aux_voice;
+  unsigned char aux_value;
+  unsigned char processed = 0;
+  unsigned char dirty_mask = 0;
+
+  status = read_phase(V2_READ_STATUS);
+  write_idle();
+  if ((status & V2_STATUS_SIGNATURE) != V2_STATUS_SIGNATURE) return 0;
+
+  p1_pending = (status & V2_STATUS_P1_PENDING) ? 1 : 0;
+  p2_pending = (status & V2_STATUS_P2_PENDING) ? 1 : 0;
+  aux_pending = (status & V2_STATUS_AUX_PENDING) ? 1 : 0;
+  if (!p1_pending && !p2_pending && !aux_pending) return 0;
+
+  if (p1_pending && !read_voice_value(V2_READ_P1_LO, V2_READ_P1_HI, &p1_value)) {
+    return 0;
+  }
+  if (p2_pending && !read_voice_value(V2_READ_P2_LO, V2_READ_P2_HI, &p2_value)) {
+    return 0;
+  }
+  if (aux_pending) {
+    aux_lo = read_phase(V2_READ_AUX_LO);
+    write_idle();
+    if ((aux_lo & V2_STATUS_VALID) == 0) return 0;
+    aux_hi = read_phase(V2_READ_AUX_HI);
+    write_idle();
+    if ((aux_hi & V2_STATUS_VALID) == 0) return 0;
+    aux_voice = (status & V2_STATUS_AUX_IS_TRI) ? V2_VOICE_TRI : V2_VOICE_NOISE;
+    aux_value = (unsigned char)(((aux_hi & 0x0FU) << 4) | (aux_lo & 0x0FU));
+  }
+
+  if (p1_pending) {
+    apply_voice_edge(&p1, p1_value);
+    ++processed;
+    dirty_mask |= DIRTY_P1;
+  }
+  if (p2_pending) {
+    apply_voice_edge(&p2, p2_value);
+    ++processed;
+    dirty_mask |= DIRTY_P2;
+  }
+  if (aux_pending) {
+    apply_slot_edge(aux_voice, aux_value);
+    ++processed;
+    if (aux_voice == V2_VOICE_TRI) {
+      dirty_mask |= DIRTY_TRI;
+    } else if (aux_voice == V2_VOICE_NOISE) {
+      dirty_mask |= DIRTY_NOISE;
+    }
+  }
+  if (processed != 0) {
+    commit_live_edges(dirty_mask);
+  }
+  return processed;
+}
+
+static unsigned char service_control_events(void) {
+  unsigned char remaining = 32;
+  unsigned char processed = 0;
+  while (remaining != 0) {
+    if (!service_one_event()) break;
+    ++processed;
+    --remaining;
+  }
+  if (processed != 0 && transport_needs_pitch_tick()) {
+    update_musical_vibrato();
+  }
+  return processed;
+}
+
+int main(void) {
+  __asm__("sei");
+  APU_FRAME = 0x40;
+  APU_CTRL = 0x1F;
+  DMC_RAW = 0x40;
+  P1_VOL = 0x30;
+  P2_VOL = 0x30;
+  TRI_LINEAR = 0;
+  NOI_VOL = 0x30;
+  NOI_LO = 0x0F;
+
+  unlock_transport();
+
+  for (;;) {
+    if (service_control_events() == 0) {
+      update_audio();
+      delay_short(1);
+    }
+  }
+
+  return 0;
+}
