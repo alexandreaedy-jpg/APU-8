@@ -8,6 +8,7 @@ The goal is to turn a real NES / Famicom into a playable external sound module w
 - Pulse 2
 - Triangle
 - Noise
+- Samples
 
 using custom ROM code, external control hardware, and eventually a more robust bus interface than the standard controller port.
 
@@ -23,7 +24,7 @@ The current situation is roughly:
 - `V16` proved that a split controller-port design could work
 - `V17` gave the best usable vibrato result by treating modulation as **preset/config** instead of a continuous live stream
 - `V18` is focused on transport precision and controller-port limits
-- `V2` is being studied as a likely long-term direction using the **NES-001 bottom expansion port**
+- `V2` is using the **NES-001 bottom expansion port**
 
 This is an active hardware/software research project, not a finished product.
 
