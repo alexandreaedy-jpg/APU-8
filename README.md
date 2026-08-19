@@ -2,200 +2,70 @@
 
 APU-8 is an experimental MIDI-controlled NES instrument project.
 
-The goal is to turn a real NES / Famicom into a playable external sound module with:
+The repository now exposes the active V2 expansion-port build first, and keeps older iterations in `Archive/`.
 
-- Pulse 1
-- Pulse 2
-- Triangle
-- Noise
+## Current active target
 
-using custom ROM code, external control hardware, and eventually a more robust bus interface than the standard controller port.
+- Current ROM source: `Project-V2-A\v2b_step5ar_flat_env_pitch`
+- Current ROM output: `Project-V2-A\v2b_step5ar_flat_env_pitch\V2_MIDI_IN_P1P2.nes`
+- Current Pico sketch: `arduino\PicoNesV2B_Step5ARFlatEnvPitch`
+- Current Pico firmware string in the sketch: `FW=t84-v2b-step5bb-groovejitter`
+- Last fully documented accepted milestone: `FW=t79-v2b-step5aw-wavefix`
 
-## Current status
+Quick commands:
 
-This repository contains both:
+```powershell
+.\tools\v2.cmd status midi
+.\tools\v2.cmd build-rom midi
+.\tools\v2.cmd build-pico midi
+.\tools\v2.cmd deploy midi
+```
 
-- the **working history** of the controller-port generations (`V15` to `V18`)
-- the **research and planning** for a future **V2 expansion-port architecture**
+For a direct overview, start with [CURRENT_TARGETS.md](CURRENT_TARGETS.md).
 
-The current situation is roughly:
-
-- `V16` proved that a split controller-port design could work
-- `V17` gave the best usable vibrato result by treating modulation as **preset/config** instead of a continuous live stream
-- `V18` is focused on transport precision and controller-port limits
-- `V2` is being studied as a likely long-term direction using the **NES-001 bottom expansion port**
-
-This is an active hardware/software research project, not a finished product.
-
-## Main idea
-
-The first major architecture used the NES controller port as a custom multi-lane transport:
-
-- `D0` = notes / gate / triggers
-- `D3` = ADSR + slower controls
-- `D4` = LFO / modulation config
-
-The best result so far came from a simple lesson:
-
-**slow musical configuration is much more reliable than trying to stream too much live modulation state through a constrained transport.**
-
-That lesson is now shaping both:
-
-- the late `V17 / V18` controller-port work
-- the planned `V2` expansion-port design
-
-## Repository structure
+## Repository layout
 
 ```text
 APU-8/
-├── arduino/                  # Arduino / Nano sketches
-│   ├── NanoNesV17DN4/
-│   ├── NanoNesV18DN4/
-│   └── ...
-├── project-v17-DN4/          # V17 ROM branch
-├── project-v18-DN4/          # Current ROM/research branch
-├── project-v16-DN3/          # Earlier stable milestone
-├── milestones/               # Frozen milestone snapshots
-├── max-for-live/             # Ableton / control experiments
-├── cc65-2.13.3/              # 6502 toolchain
-├── bridge.py                 # Host-side bridge experiments
-├── bridge_separate_channels.py
-└── README.md
+|-- Project-V2-A/                     # current ROM source tree
+|   `-- v2b_step5ar_flat_env_pitch/
+|-- arduino/                          # current Pico sketch + diagnostics
+|   |-- PicoNesV2B_Step5ARFlatEnvPitch/
+|   |-- PicoMcp3008RawDiag/
+|   `-- PicoPanelCtrlFullDiag/
+|-- Archive/                          # archived ROM/sketch history and legacy branches
+|   |-- Project-V2-A/
+|   |-- arduino/
+|   `-- legacy-root/
+|-- hardware/                         # KiCad / PCB work
+|-- max-for-live/                     # control tooling
+|-- milestones/                       # frozen milestone snapshots
+`-- tools/                            # build / flash shortcuts
 ```
 
-## Important documents
+## What moved to Archive
 
-### Current architecture / planning
+- Older `Project-V2-A` step folders
+- Older Arduino Nano / Pico sketches
+- Legacy controller-port ROM branches and side experiments
 
-- [project-v18-DN4/V18_1_ACTION_PLAN.md](project-v18-DN4/V18_1_ACTION_PLAN.md)
-- [project-v18-DN4/LFO_V2_ARCHITECTURE.md](project-v18-DN4/LFO_V2_ARCHITECTURE.md)
-- [project-v18-DN4/V18_CLK_PROTOCOL.md](project-v18-DN4/V18_CLK_PROTOCOL.md)
+The build shortcuts were kept alive:
 
-### V2 expansion-port work
+- `midi` now targets the current active build
+- `midi-v2a` points to the archived V2A baseline
+- `midi-v2b1` to `midi-v2b21` still point to their archived step folders
+- `midi-v2b22` explicitly points to the current Step5AR folder
 
-- [project-v18-DN4/V2_EXPANSION_PORT_BOM_2026-05-04.md](project-v18-DN4/V2_EXPANSION_PORT_BOM_2026-05-04.md)
-- [project-v18-DN4/V2_EXPANSION_PORT_PIN_PLAN.md](project-v18-DN4/V2_EXPANSION_PORT_PIN_PLAN.md)
-- [project-v18-DN4/V2_EXPANSION_PORT_QUICK_REFERENCE_2026-05-04.md](project-v18-DN4/V2_EXPANSION_PORT_QUICK_REFERENCE_2026-05-04.md)
-- [project-v18-DN4/V2_GPIO_BUDGET_AND_CONTROLS.md](project-v18-DN4/V2_GPIO_BUDGET_AND_CONTROLS.md)
+## Important files
 
-### Research notes
+- [CURRENT_TARGETS.md](CURRENT_TARGETS.md)
+- [PROJECT_STATE.md](PROJECT_STATE.md)
+- [SHORT_COMMANDS.md](SHORT_COMMANDS.md)
+- [Project-V2-A/V2B_STEP5AR_FLAT_ENV_PITCH_2026-05-28.md](Project-V2-A/V2B_STEP5AR_FLAT_ENV_PITCH_2026-05-28.md)
+- [hardware/APU8_V2B_KICAD/README.md](hardware/APU8_V2B_KICAD/README.md)
 
-- [project-v18-DN4/FAMIMIMIDI_RESEARCH_NOTES.md](project-v18-DN4/FAMIMIMIDI_RESEARCH_NOTES.md)
+## Notes
 
-## Versions at a glance
-
-### V15
-
-- very early `D0`-focused transport work
-
-### V16
-
-- important stable milestone
-- `D0` notes stable
-- `D3` ADSR + duty stable
-- `D4` LFO stable
-
-### V17
-
-- cleaner modulation direction
-- vibrato presets proved much more viable than continuous live modulation streaming
-
-### V18
-
-- transport redesign
-- focus on note precision, trigger timing, and controller-port limits
-
-### V2 (planned)
-
-- flashcart still used for ROM/runtime
-- external hardware moved toward the NES-001 bottom expansion port
-- likely RP2040-based external interface
-
-## Hardware overview
-
-### Controller-port generations
-
-Typical V1.x setup:
-
-- NES / Famicom
-- flashcart / EverDrive
-- Arduino Nano
-- MIDI DIN input
-- custom wiring to controller-port data lines
-
-### Planned V2 direction
-
-Current V2 planning targets these expansion-port signals:
-
-- `CPU D0..D7`
-- `A15`
-- `OUT0..OUT2`
-- `/IRQ`
-- `+5V`
-- `GND`
-
-Important caveat:
-
-- the NES-001 bottom expansion port does **not** expose CPU `R/W`
-
-so V2 will need a custom handshake/latch strategy, not a generic memory-mapped design.
-
-## Toolchain
-
-This repository uses `cc65` for NES ROM builds.
-
-The ROM work is primarily inside:
-
-- [project-v17-DN4](project-v17-DN4)
-- [project-v18-DN4](project-v18-DN4)
-
-Each project directory contains its own `build.ps1` and ROM sources.
-
-## Why this project exists
-
-Many NES MIDI projects already exist, but they tend to fall into different tradeoffs:
-
-- simple but limited
-- powerful but tightly specialized
-- strongly dependent on PC-side software
-
-APU-8 is an attempt to find a balance between:
-
-- real hardware feel
-- direct musical control
-- robust note timing
-- and an architecture that can grow without collapsing under its own transport complexity
-
-## Known limitations
-
-At the current stage:
-
-- controller-port transport is still a major source of constraints
-- modulation quality depends heavily on how much logic is kept out of the urgent note path
-- some branches are exploratory and not all are musically stable
-- V2 is planned, but not yet implemented
-
-## References
-
-The project has been informed in part by public work and documentation around:
-
-- ChipMaestro
-- MIDINES
-- NESizer2
-- Famimimidi
-- SynthNes
-
-These references are documented more explicitly in the research notes inside `project-v18-DN4`.
-
-## Feedback welcome
-
-If you have experience with:
-
-- NES controller-port timing
-- custom expansion-port hardware
-- MIDI-to-APU workflows
-- cart-side synth runtimes
-
-feedback is very welcome.
-
-This project is still evolving, and outside technical input is extremely valuable at this stage.
+- The active ROM folder is still named `v2b_step5ar_flat_env_pitch`, but the paired Pico sketch continued past the original Step5AR note and now reports `t84-v2b-step5bb-groovejitter`.
+- `PROJECT_STATE.md` remains the long-form engineering journal.
+- `Archive/` keeps history accessible without leaving the root crowded.

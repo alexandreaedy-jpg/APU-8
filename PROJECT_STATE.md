@@ -4,6 +4,12 @@
 
 Build a reliable Pico-driven NES expansion-port control path for MIDI/control features, replacing the old Nano/controller-port V18 path where jitter, ignored notes, and LFO timing became limiting.
 
+Repository layout note:
+
+- active ROM folder: `Project-V2-A\v2b_step5ar_flat_env_pitch`
+- active Pico sketch: `arduino\PicoNesV2B_Step5ARFlatEnvPitch`
+- archived step folders now live under `Archive\Project-V2-A` and `Archive\arduino`
+
 ## Current Focus
 
 `Step5AA DMC one-shot AUX`: keep the Step5Z typed `AUX` baseline, keep `DMC pitch` disabled, and treat DMC as a sample trigger class rather than a note/control pair competing with `TRI`.
@@ -51,15 +57,17 @@ Success criteria:
 ## Current MIDI Variant
 
 ROM:
-- `Project-V2-A\v2b_step5_p1p2trinoisedmc_ctrl_midi\V2_MIDI_IN_P1P2.nes`
+- `Project-V2-A\v2b_step5ar_flat_env_pitch\V2_MIDI_IN_P1P2.nes`
 - deployed target: `D:\game.nes`
-- frozen snapshot: `Project-V2-A\v2b_step5_p1p2trinoisedmc_ctrl_midi\V2_MIDI_IN_P1P2.nes`
+- active source folder: `Project-V2-A\v2b_step5ar_flat_env_pitch`
 
 Pico sketch:
-- `arduino\PicoNesV2B_Step5P1P2TriNoiseDmcCtrlMidi\PicoNesV2B_Step5P1P2TriNoiseDmcCtrlMidi.ino`
+- `arduino\PicoNesV2B_Step5ARFlatEnvPitch\PicoNesV2B_Step5ARFlatEnvPitch.ino`
 - MIDI RX: GP1
 - upload port: COM6
-- frozen snapshot: `arduino\PicoNesV2B_Step5P1P2TriNoiseDmcCtrlMidi\PicoNesV2B_Step5P1P2TriNoiseDmcCtrlMidi.ino`
+- current sketch firmware string: `FW=t84-v2b-step5bb-groovejitter`
+- last fully documented accepted firmware string: `FW=t79-v2b-step5aw-wavefix`
+- default shortcut target: `midi`
 
 Current Step5 baseline:
 - Pico firmware tag:
@@ -135,6 +143,7 @@ Current Step5 baseline:
   - final accepted ROM base: `Project-V2-A\v2b_step5ar_flat_env_pitch\V2_MIDI_IN_P1P2.nes`
   - final accepted Pico firmware: `FW=t79-v2b-step5aw-wavefix`
   - notes: `Project-V2-A\V2B_STEP5AR_FLAT_ENV_PITCH_2026-05-28.md`
+  - current active Pico sketch string in the same folder: `FW=t84-v2b-step5bb-groovejitter`
 - channel map:
   - `CH11 = DMC Amen trigger-only, notes 36..61`
   - `CH12 = P1`
@@ -260,10 +269,11 @@ Current Step5 baseline:
   - `Project-V2-A\V2B_STEP3_P1P2TRINOISE_VALIDATED_2026-05-18.md`
 - Step5 now validated as the current rollback-safe baseline:
   - `Project-V2-A\V2B_STEP5_CTRL_VALIDATED_2026-05-19.md`
-- current frozen expressive build:
+- current active build:
   - ROM: `Project-V2-A\v2b_step5ar_flat_env_pitch\V2_MIDI_IN_P1P2.nes`
   - Pico: `arduino\PicoNesV2B_Step5ARFlatEnvPitch\PicoNesV2B_Step5ARFlatEnvPitch.ino`
-  - firmware string expected in logs: `FW=t79-v2b-step5aw-wavefix`
+  - firmware string currently expected in logs: `FW=t84-v2b-step5bb-groovejitter`
+  - last fully documented accepted firmware string: `FW=t79-v2b-step5aw-wavefix`
   - accepted behavior:
     - stable full-lane note transport
     - TRI/DMC conflict fix preserved (`update_triangle()` must not write `$4015`)

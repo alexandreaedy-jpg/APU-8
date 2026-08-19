@@ -4,11 +4,13 @@ Use these short phrases to reduce token use.
 
 ## Build / Deploy
 
-- `status midi`: show paths for current MIDI target
-- `build midi`: build MIDI ROM + Pico
-- `rom midi`: build/push or push MIDI ROM to `D:\game.nes`
-- `flash midi`: flash Pico MIDI sketch on COM6
-- `deploy midi`: build ROM, push ROM, build Pico, flash Pico
+- `status midi`: show paths for the current active Step5AR / Step5BB target
+- `build midi`: build the current active MIDI ROM + Pico
+- `rom midi`: build/push or push the current active MIDI ROM to `D:\game.nes`
+- `flash midi`: flash the current active Pico MIDI sketch on COM6
+- `deploy midi`: build ROM, push ROM, build Pico, flash Pico for the current active target
+- `status midi-v2a`: show paths for the archived V2A baseline
+- `deploy midi-v2a`: rebuild/reflash the archived V2A baseline
 - `status midi-v2b1`: show paths for frozen V2B P1/P2 base
 - `deploy midi-v2b1`: rebuild/reflash the frozen V2B P1/P2 base
 - `status midi-v2b2`: show paths for experimental V2B P1/P2/TRI step
@@ -54,6 +56,11 @@ Use these short phrases to reduce token use.
 - `status midi-v2b22`: show paths for Step5AR flat env / pitch cleanup experiment
 - `deploy midi-v2b22`: rebuild/reflash Step5AR flat env / pitch cleanup experiment
 
+Historical note:
+
+- `midi` now points to the active build in `Project-V2-A\v2b_step5ar_flat_env_pitch` + `arduino\PicoNesV2B_Step5ARFlatEnvPitch`
+- archived step targets still work through the same short commands, but their source folders now live under `Archive\`
+
 Local commands:
 
 ```powershell
@@ -63,6 +70,8 @@ Local commands:
 .\tools\v2.cmd build-pico midi
 .\tools\v2.cmd flash-pico midi
 .\tools\v2.cmd deploy midi
+.\tools\v2.cmd status midi-v2a
+.\tools\v2.cmd deploy midi-v2a
 .\tools\v2.cmd status midi-v2b1
 .\tools\v2.cmd deploy midi-v2b1
 .\tools\v2.cmd status midi-v2b2
